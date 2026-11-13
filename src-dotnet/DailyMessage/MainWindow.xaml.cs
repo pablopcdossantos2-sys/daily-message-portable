@@ -70,6 +70,7 @@ public sealed partial class MainWindow : Window
         for (var index = 0; index < _config.Blocks.Count; index++)
         {
             var block = _config.Blocks[index];
+            var blockIndex = index;
             var card = new Border
             {
                 Padding = new Thickness(14),
@@ -90,17 +91,17 @@ public sealed partial class MainWindow : Window
 
             var moveUp = new Button { Content = "↑", MinWidth = 36, Padding = new Thickness(8, 4, 8, 4), IsEnabled = index > 0 };
             Grid.SetColumn(moveUp, 1);
-            moveUp.Click += (_, _) => MoveBlock(index, -1);
+            moveUp.Click += (_, _) => MoveBlock(blockIndex, -1);
             header.Children.Add(moveUp);
 
             var moveDown = new Button { Content = "↓", MinWidth = 36, Padding = new Thickness(8, 4, 8, 4), IsEnabled = index < _config.Blocks.Count - 1 };
             Grid.SetColumn(moveDown, 2);
-            moveDown.Click += (_, _) => MoveBlock(index, 1);
+            moveDown.Click += (_, _) => MoveBlock(blockIndex, 1);
             header.Children.Add(moveDown);
 
             var remove = new Button { Content = "Remover", MinWidth = 76 };
             Grid.SetColumn(remove, 3);
-            remove.Click += (_, _) => RemoveBlock(index);
+            remove.Click += (_, _) => RemoveBlock(blockIndex);
             header.Children.Add(remove);
             content.Children.Add(header);
 
