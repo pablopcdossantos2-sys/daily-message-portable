@@ -22,6 +22,19 @@ jobs:
         run: dotnet test tests-dotnet/DailyMessage.Core.Tests/DailyMessage.Core.Tests.csproj --configuration Release
       - name: Build native WinUI 3 MSIX project
         run: dotnet build src-dotnet/DailyMessage/DailyMessage.csproj --configuration Release -p:Platform=x64 -p:AppxPackageSigningEnabled=false
+      - name: Measure native MSIX package
+        shell: pwsh
+        run: |
+          $package = Get-ChildItem "src-dotnet/DailyMessage/AppPackages" -Filter "*.msix" -Recurse | Select-Object -First 1
+          if (-not $package) { throw "Native WinUI 3 MSIX package was not generated." }
+          $sizeMB = [Math]::Round($package.Length / 1MB, 2)
+          Write-Host "NATIVE_MSIX_PATH=$($package.FullName)"
+          Write-Host "NATIVE_MSIX_SIZE_BYTES=$($package.Length)"
+          Write-Host "NATIVE_MSIX_SIZE_MB=$sizeMB"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: DailyMessage-WinUI3-MSIX-BUILD
+          path: src-dotnet/DailyMessage/AppPackages/**/*.msix
 
   test-and-package:
     runs-on: windows-latest
