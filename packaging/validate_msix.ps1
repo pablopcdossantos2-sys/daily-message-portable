@@ -56,6 +56,12 @@ try {
         throw "O teste interno do aplicativo excedeu 30 segundos."
     }
     if ($process.ExitCode -ne 0) {
+        $localState = Join-Path $env:LOCALAPPDATA "Packages\$($installed.PackageFamilyName)\LocalState"
+        $logFile = Join-Path $localState "dailymessage.log"
+        if (Test-Path $logFile) {
+            Write-Host "==> Log do aplicativo:"
+            Get-Content $logFile -Tail 80
+        }
         throw "O teste interno do aplicativo retornou código $($process.ExitCode)."
     }
 
