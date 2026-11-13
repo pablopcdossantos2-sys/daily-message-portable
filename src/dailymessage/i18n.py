@@ -119,7 +119,7 @@ STRINGS: dict[str, dict[str, str]] = {
         "autostart.blocked_policy": "Startup was blocked by your organization's policy.",
         "autostart.managed_policy": "Startup is managed by your organization's policy.",
         "autostart.unsupported": "Startup is only available on Windows.",
-        "autostart.store_only": "Install Daily Message from the Microsoft Store to enable startup."
+        "autostart.store_only": "Install Daily Message from the Microsoft Store to enable startup.",
         "autostart.error": "Could not change the startup setting.",
         "autostart.open_settings": "Open Windows settings",
         "btn.preview": "Preview",
