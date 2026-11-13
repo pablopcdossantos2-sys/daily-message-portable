@@ -1,4 +1,4 @@
-using Windows.ApplicationModel.StartupTask;
+using Windows.ApplicationModel;
 
 namespace DailyMessage;
 
