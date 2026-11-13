@@ -8,23 +8,23 @@
             <Border Padding="28">
             <StackPanel x:Name="RootPanel" MaxWidth="920" HorizontalAlignment="Center" Spacing="18">
                 <StackPanel Spacing="4">
-                    <TextBlock Text="Daily Message" FontSize="30" FontWeight="SemiBold" />
-                    <TextBlock Text="Monte a mensagem que será exibida quando você entrar no Windows."
+                    <TextBlock x:Name="HeadingText" Text="Daily Message" FontSize="30" FontWeight="SemiBold" />
+                    <TextBlock x:Name="SubtitleText" Text="Monte a mensagem que será exibida quando você entrar no Windows."
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                 </StackPanel>
 
                 <Border Padding="18" CornerRadius="14" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                     <StackPanel Spacing="10">
-                        <TextBlock Text="Conteúdo da mensagem" FontSize="18" FontWeight="SemiBold" />
+                        <TextBlock x:Name="ContentHeading" Text="Conteúdo da mensagem" FontSize="18" FontWeight="SemiBold" />
                         <TextBox x:Name="TitleBox" Header="Título" PlaceholderText="Ex.: Bom dia!" />
                         <StackPanel x:Name="BlocksPanel" Spacing="12" />
                         <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Left">
-                            <Button Content="+ Texto" Click="AddText_Click" />
-                            <Button Content="+ Imagem" Click="AddImage_Click" />
-                            <Button Content="+ Checklist" Click="AddChecklist_Click" />
+                            <Button x:Name="AddTextButton" Content="+ Texto" Click="AddText_Click" />
+                            <Button x:Name="AddImageButton" Content="+ Imagem" Click="AddImage_Click" />
+                            <Button x:Name="AddChecklistButton" Content="+ Checklist" Click="AddChecklist_Click" />
                         </StackPanel>
-                        <TextBlock Text="Você pode organizar os blocos na ordem desejada. Textos: até 30.000 caracteres no total."
+                        <TextBlock x:Name="ContentHint" Text="Você pode organizar os blocos na ordem desejada. Textos: até 30.000 caracteres no total."
                                    FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                     </StackPanel>
                 </Border>
@@ -32,8 +32,8 @@
                 <Border Padding="18" CornerRadius="14" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                     <StackPanel Spacing="10">
-                        <TextBlock Text="Tempo obrigatório" FontSize="18" FontWeight="SemiBold" />
-                        <TextBlock Text="A mensagem só poderá ser fechada quando o contador chegar a zero e todas as checklists obrigatórias estiverem concluídas."
+                        <TextBlock x:Name="TimeHeading" Text="Tempo obrigatório" FontSize="18" FontWeight="SemiBold" />
+                        <TextBlock x:Name="TimeDescription" Text="A mensagem só poderá ser fechada quando o contador chegar a zero e todas as checklists obrigatórias estiverem concluídas."
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                         <NumberBox x:Name="SecondsBox" Header="Segundos (3 a 600)" Minimum="3" Maximum="600"
                                    Value="10" SpinButtonPlacementMode="Inline" />
@@ -43,19 +43,19 @@
                 <Border Padding="18" CornerRadius="14" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                     <StackPanel Spacing="10">
-                        <TextBlock Text="Aparência" FontSize="18" FontWeight="SemiBold" />
-                        <ComboBox x:Name="ThemeBox" Header="Tema" SelectedIndex="0" Width="220">
+                        <TextBlock x:Name="AppearanceHeading" Text="Aparência" FontSize="18" FontWeight="SemiBold" />
+                        <ComboBox x:Name="ThemeBox" Header="Tema" SelectedIndex="0" Width="220" SelectionChanged="Appearance_SelectionChanged">
                             <ComboBoxItem Content="Sistema" />
                             <ComboBoxItem Content="Claro" />
                             <ComboBoxItem Content="Escuro" />
                         </ComboBox>
-                        <ComboBox x:Name="AccentBox" Header="Cor de destaque" SelectedIndex="0" Width="220">
+                        <ComboBox x:Name="AccentBox" Header="Cor de destaque" SelectedIndex="0" Width="220" SelectionChanged="Appearance_SelectionChanged">
                             <ComboBoxItem Content="Índigo" />
                             <ComboBoxItem Content="Verde-azulado" />
                             <ComboBoxItem Content="Rosa" />
                             <ComboBoxItem Content="Âmbar" />
                         </ComboBox>
-                        <ComboBox x:Name="LanguageBox" Header="Idioma" SelectedIndex="0" Width="220">
+                        <ComboBox x:Name="LanguageBox" Header="Idioma" SelectedIndex="0" Width="220" SelectionChanged="Language_SelectionChanged">
                             <ComboBoxItem Content="Automático" />
                             <ComboBoxItem Content="Português (Brasil)" />
                             <ComboBoxItem Content="English" />
@@ -66,7 +66,7 @@
                 <Border Padding="18" CornerRadius="14" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                     <StackPanel Spacing="8">
-                        <TextBlock Text="Inicialização com o Windows" FontSize="18" FontWeight="SemiBold" />
+                        <TextBlock x:Name="StartupHeading" Text="Inicialização com o Windows" FontSize="18" FontWeight="SemiBold" />
                         <ToggleSwitch x:Name="StartupToggle" Header="Iniciar junto com o Windows"
                                       Toggled="StartupToggle_Toggled" />
                         <TextBlock x:Name="StartupNote" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
@@ -84,7 +84,7 @@
             <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
                 <TextBlock x:Name="FeedbackText" VerticalAlignment="Center"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
-                <Button Grid.Column="1" Content="Visualizar" Click="Preview_Click" MinWidth="120" />
+                <Button x:Name="PreviewButton" Grid.Column="1" Content="Visualizar" Click="Preview_Click" MinWidth="120" />
                 <Button x:Name="SaveButton" Grid.Column="2" Content="Salvar" Click="Save_Click" MinWidth="120"
                         Style="{StaticResource AccentButtonStyle}" />
             </Grid>
