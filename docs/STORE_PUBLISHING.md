@@ -42,7 +42,14 @@ Substitua os ícones placeholder (`assets/` e `packaging/Assets/`) pela arte fin
 
 ## 8. GitHub Actions package identity
 
-After obtaining the Partner Center identity, add these repository Variables under Settings → Secrets and variables → Actions → Variables:
+Identidade confirmada no Partner Center para este produto:
+
+- `MSIX_IDENTITY_NAME`: `pablopcdsantos.DailyMessage`
+- `MSIX_PUBLISHER`: `CN=A3E973B8-1411-4314-B754-F3DADD99C070`
+- `MSIX_PUBLISHER_DISPLAY_NAME`: `pablopcdsantos`
+- `MSIX_DISPLAY_NAME`: `StartupMessage`
+
+O workflow já utiliza esses valores como padrão. Se desejar, eles também podem ser cadastrados como Repository Variables em Settings → Secrets and variables → Actions → Variables:
 
 - MSIX_IDENTITY_NAME
 - MSIX_PUBLISHER
