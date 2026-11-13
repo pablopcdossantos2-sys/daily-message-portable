@@ -142,7 +142,6 @@ public sealed partial class MessageWindow : Window
 
     private void RefreshState()
     {
-        if (!IsActive && _hwnd == 0) return;
         var elapsed = _clock.Elapsed;
         var remaining = MessageRules.RemainingSeconds(elapsed, _seconds);
         CountdownText.Text = _preview
