@@ -14,8 +14,8 @@ jobs:
   test-and-package:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: pip
@@ -44,9 +44,25 @@ jobs:
         run: |
           $identity = if ($env:MSIX_IDENTITY_NAME) { $env:MSIX_IDENTITY_NAME } else { "Publisher.DailyMessage" }
           ./packaging/validate_msix.ps1 -MsixPath "release/DailyMessage-validation.msix" -IdentityName $identity
+      - name: Create test installation kit
+        shell: pwsh
+        run: |
+          $kit = "release/test-kit"
+          New-Item -ItemType Directory -Force $kit | Out-Null
+          Copy-Item "release/DailyMessage-validation.msix" $kit
+          Copy-Item "release/DailyMessage-test.cer" $kit
+          Copy-Item "packaging/Install-DailyMessage-Test.ps1" $kit
+          Copy-Item "packaging/Install-DailyMessage-Test.cmd" $kit
+          Copy-Item "docs/INSTALL_TEST_PACKAGE.md" (Join-Path $kit "LEIA-ANTES-DE-INSTALAR.md")
+          Compress-Archive -Path "$kit/*" -DestinationPath "release/DailyMessage-MSIX-TEST.zip" -Force
+      - name: Upload test installation kit
+        uses: actions/upload-artifact@v7
+        with:
+          name: DailyMessage-MSIX-TEST-KIT
+          path: release/DailyMessage-MSIX-TEST.zip
       - name: Upload Store-ready MSIX
         if: ${{ vars.MSIX_IDENTITY_NAME != '' && vars.MSIX_PUBLISHER != '' && vars.MSIX_PUBLISHER_DISPLAY_NAME != '' && vars.MSIX_DISPLAY_NAME != '' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: DailyMessage-MSIX-STORE
           path: release/DailyMessage_*.msix
@@ -58,6 +74,6 @@ jobs:
           path: release/DailyMessage_*.msix
       - name: Publish GitHub release asset
         if: ${{ startsWith(github.ref, 'refs/tags/v') }}
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: release/*.msix
