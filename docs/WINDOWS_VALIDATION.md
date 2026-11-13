@@ -12,7 +12,7 @@ O pipeline para Windows:
 4. cria o pacote MSIX;
 5. assina uma cópia separada com certificado temporário;
 6. instala a cópia de teste no Windows;
-7. confirma que o pacote tem os dois executáveis e que a extensão DailyMessageTask aponta para DailyMessageRunner.exe, desativada por padrão;
+7. confirma que o pacote tem os dois executáveis e que a extensão StartupMessageTask aponta para StartupMessageRunner.exe, desativada por padrão;
 8. executa o modo de diagnóstico dentro da identidade MSIX, consultando a StartupTask e gravando/removendo um arquivo no espaço LocalState;
 9. publica como artefato apenas o MSIX não assinado, destinado à submissão à Store.
 
@@ -24,7 +24,7 @@ Faça os testes em uma conta Windows comum, sem privilégios administrativos, ap
 
 ### 1. Primeira execução e configurações
 
-- [ ] Abrir o Daily Message pelo menu Iniciar.
+- [ ] Abrir o StartupMessage pelo menu Iniciar.
 - [ ] Confirmar que a janela de configurações abre sem console ou erro.
 - [ ] Adicionar blocos de texto, imagem e checklist.
 - [ ] Reordenar blocos, remover um bloco e salvar.
@@ -35,9 +35,9 @@ Faça os testes em uma conta Windows comum, sem privilégios administrativos, ap
 ### 2. Inicialização com Windows
 
 - [ ] Na primeira execução, ativar **Iniciar junto com o Windows**.
-- [ ] Confirmar que o Windows registra Daily Message em Configurações → Aplicativos → Inicialização e no Gerenciador de Tarefas → Aplicativos de inicialização.
-- [ ] Sair da sessão e entrar novamente (ou reiniciar); confirmar que DailyMessageRunner.exe apresenta a mensagem.
-- [ ] Desativar a opção dentro do Daily Message; entrar novamente e confirmar que a mensagem não aparece.
+- [ ] Confirmar que o Windows registra StartupMessage em Configurações → Aplicativos → Inicialização e no Gerenciador de Tarefas → Aplicativos de inicialização.
+- [ ] Sair da sessão e entrar novamente (ou reiniciar); confirmar que StartupMessageRunner.exe apresenta a mensagem.
+- [ ] Desativar a opção dentro do StartupMessage; entrar novamente e confirmar que a mensagem não aparece.
 - [ ] Ativar novamente e desativar pelo painel de Inicialização do Windows; confirmar que o aplicativo reflete o estado bloqueado pelo usuário.
 - [ ] Confirmar que o usuário consegue abrir as configurações manualmente mesmo com a inicialização automática desligada.
 
@@ -71,7 +71,7 @@ Observação: o usuário precisa abrir o aplicativo pelo menos uma vez para regi
 
 ## Dados a registrar
 
-Anote versão do Windows, arquitetura, escala de tela, resultado de cada teste e qualquer mensagem de erro. Se houver falha, anexe o arquivo de log local do Daily Message e uma captura de tela, removendo informações privadas da mensagem antes de compartilhar.
+Anote versão do Windows, arquitetura, escala de tela, resultado de cada teste e qualquer mensagem de erro. Se houver falha, anexe o arquivo de log local do StartupMessage e uma captura de tela, removendo informações privadas da mensagem antes de compartilhar.
 
 ## Conclusão
 
