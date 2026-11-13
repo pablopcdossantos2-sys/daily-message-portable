@@ -34,8 +34,46 @@ def _is_startup_launch(argv: list[str]) -> bool:
     return Path(sys.executable).stem.lower().endswith("runner")
 
 
+def _msix_self_test() -> int:
+    """Smoke test headless, executed only after installing the MSIX package."""
+    _setup_logging()
+    log = logging.getLogger("dailymessage.msix_test")
+    probe = None
+    try:
+        if not winapi.IS_WINDOWS or not winapi.is_packaged():
+            return 20
+
+        from winrt.windows.storage import ApplicationData
+        from .autostart import _winrt_status, Status
+
+        local_folder = Path(ApplicationData.current.local_folder.path).resolve()
+        if cfgmod.config_dir().resolve() != local_folder:
+            return 21
+
+        startup_status = _winrt_status()
+        if not isinstance(startup_status, Status):
+            return 22
+
+        probe = local_folder / ".dailymessage-msix-selftest"
+        probe.write_text("ok", encoding="utf-8")
+        if probe.read_text(encoding="utf-8") != "ok":
+            return 23
+        return 0
+    except Exception:
+        log.exception("MSIX integration smoke test failed")
+        return 24
+    finally:
+        if probe is not None:
+            try:
+                probe.unlink(missing_ok=True)
+            except OSError:
+                log.warning("Could not remove temporary MSIX test file")
+
+
 def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
+    if "--msix-self-test" in argv:
+        return _msix_self_test()
     _setup_logging()
     log = logging.getLogger("dailymessage")
     startup = _is_startup_launch(argv)
