@@ -25,6 +25,21 @@ public sealed partial class MessageWindow : Window
         _preview = preview;
         _config = config?.Normalize() ?? ConfigStore.LoadAsync(GetConfigPath()).GetAwaiter().GetResult();
         _seconds = preview ? Math.Min(_config.Seconds, 5) : _config.Seconds;
+        MessageRootGrid.RequestedTheme = _config.Theme switch
+        {
+            "light" => ElementTheme.Light,
+            "dark" => ElementTheme.Dark,
+            _ => ElementTheme.Default
+        };
+        var accent = _config.Accent switch
+        {
+            "teal" => Windows.UI.Color.FromArgb(255, 13, 148, 136),
+            "rose" => Windows.UI.Color.FromArgb(255, 225, 29, 72),
+            "amber" => Windows.UI.Color.FromArgb(255, 217, 119, 6),
+            _ => Windows.UI.Color.FromArgb(255, 99, 102, 241)
+        };
+        CloseButton.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(accent);
+        CountdownBar.Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(accent);
         Title = preview ? "Daily Message — Prévia" : "Daily Message";
         CountdownBar.Maximum = _seconds;
         CountdownBar.Value = _seconds;
