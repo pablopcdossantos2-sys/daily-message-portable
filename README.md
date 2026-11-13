@@ -70,6 +70,8 @@ python launcher.py --startup --no-delay  # simula a mensagem de boot
 python -m pytest -q                      # testes
 ```
 
+Antes de considerar o aplicativo pronto para publicação, conclua o [roteiro de validação funcional no Windows](docs/WINDOWS_VALIDATION.md). O CI também instala uma cópia assinada temporariamente para validar o registro MSIX e as APIs WinRT; o artefato publicado pelo workflow é somente o MSIX não assinado.
+
 ## 📦 Gerar o pacote MSIX
 
 O empacotamento requer Windows 10/11 SDK (makeappx.exe) e os valores de identidade fornecidos pelo Partner Center. Execute packaging/build.ps1 com IdentityName, Publisher, PublisherDisplayName e DisplayName. O MSIX será criado em release/. A versão destinada à Store não precisa ser assinada localmente; a Microsoft assina o pacote durante a publicação. Consulte docs/STORE_PUBLISHING.md.
