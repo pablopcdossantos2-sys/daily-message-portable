@@ -1,3 +1,4 @@
+using Xunit;
 using DailyMessage.Core;
 
 namespace DailyMessage.Core.Tests;
@@ -53,7 +54,7 @@ public sealed class MessageRulesTests
         }.Normalize();
 
         Assert.Equal(600, config.Seconds);
-        Assert.Equal(["text", "checklist", "text"], config.Blocks.Select(x => x.Type));
+        Assert.Equal(new[] { "text", "checklist", "text" }, config.Blocks.Select(x => x.Type).ToArray());
         Assert.Equal("First", config.Blocks[0].Text);
         Assert.Equal("Last", config.Blocks[2].Text);
         Assert.Equal("heading", config.Blocks[2].Style);
