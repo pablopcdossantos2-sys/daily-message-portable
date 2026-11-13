@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS  Gera exclusivamente o pacote MSIX para Microsoft Store.
-.EXAMPLE   ./packaging/build.ps1 -Msix -IdentityName "12345Publisher.DailyMessage" -Publisher "CN=XXXXXXXX-XXXX" -PublisherDisplayName "Seu Nome"
-.EXAMPLE   ./packaging/build.ps1 -Msix -SignTest   # MSIX assinado com certificado de teste (instalação local)
+.EXAMPLE   ./packaging/build.ps1 -IdentityName "12345Publisher.DailyMessage" -Publisher "CN=XXXXXXXX-XXXX" -PublisherDisplayName "Seu Nome"
+.EXAMPLE   ./packaging/build.ps1 -SignTest   # MSIX assinado com certificado de teste (instalação local)
 #>
 [CmdletBinding()]
 param(
@@ -45,7 +45,7 @@ if ($LASTEXITCODE -ne 0) { throw "PyInstaller falhou" }
 $release = Join-Path $root "release"
 New-Item -ItemType Directory -Force $release | Out-Null
 
-  Write-Host "==> MSIX"
+  Write-Host "==> Empacotando MSIX"
   $makeappx = Find-SdkTool "makeappx.exe"
   $stage = Join-Path $root "build/msix"
   if (Test-Path $stage) { Remove-Item $stage -Recurse -Force }
