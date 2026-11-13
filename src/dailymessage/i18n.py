@@ -7,7 +7,7 @@ LANG_NAMES = {"pt-BR": "Português (Brasil)", "en": "English"}
 
 STRINGS: dict[str, dict[str, str]] = {
     "pt-BR": {
-        "app.name": "Daily Message",
+        "app.name": "StartupMessage",
         "settings.subtitle": "Exiba uma mensagem sempre que o Windows iniciar.",
         "card.content": "Conteúdo da mensagem",
         "content.hint": "Monte a mensagem com blocos de texto, imagens e checklists. A janela se adapta ao tamanho do conteúdo (limite de {max} caracteres de texto no total).",
@@ -52,7 +52,7 @@ STRINGS: dict[str, dict[str, str]] = {
         "autostart.blocked_policy": "A inicialização automática foi bloqueada pela política da sua organização.",
         "autostart.managed_policy": "A inicialização automática é gerenciada pela política da sua organização.",
         "autostart.unsupported": "A inicialização automática só está disponível no Windows.",
-        "autostart.store_only": "Instale o Daily Message pela Microsoft Store para habilitar a inicialização automática.",
+        "autostart.store_only": "Instale o StartupMessage pela Microsoft Store para habilitar a inicialização automática.",
         "autostart.error": "Não foi possível alterar a inicialização automática.",
         "autostart.open_settings": "Abrir configurações do Windows",
         "btn.preview": "Visualizar",
@@ -74,7 +74,7 @@ STRINGS: dict[str, dict[str, str]] = {
         "footer.about": "Versão {v} · Código aberto (MIT) · Este app não coleta nenhum dado.",
     },
     "en": {
-        "app.name": "Daily Message",
+        "app.name": "StartupMessage",
         "settings.subtitle": "Show a message every time Windows starts.",
         "card.content": "Message content",
         "content.hint": "Build the message with text, image and checklist blocks. The window adapts to the content size ({max} text characters in total).",
@@ -119,7 +119,7 @@ STRINGS: dict[str, dict[str, str]] = {
         "autostart.blocked_policy": "Startup was blocked by your organization's policy.",
         "autostart.managed_policy": "Startup is managed by your organization's policy.",
         "autostart.unsupported": "Startup is only available on Windows.",
-        "autostart.store_only": "Install Daily Message from the Microsoft Store to enable startup.",
+        "autostart.store_only": "Install StartupMessage from the Microsoft Store to enable startup.",
         "autostart.error": "Could not change the startup setting.",
         "autostart.open_settings": "Open Windows settings",
         "btn.preview": "Preview",
