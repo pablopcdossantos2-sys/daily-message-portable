@@ -10,7 +10,7 @@ param(
 $ErrorActionPreference = "Stop"
 $packagePath = (Resolve-Path $MsixPath).Path
 $releaseDir = Split-Path $packagePath -Parent
-$certificatePath = Join-Path $releaseDir "DailyMessage-test.cer"
+$certificatePath = Join-Path $releaseDir "StartupMessage-test.cer"
 if (-not (Test-Path $certificatePath)) {
     throw "Certificado de teste não encontrado: $certificatePath"
 }
