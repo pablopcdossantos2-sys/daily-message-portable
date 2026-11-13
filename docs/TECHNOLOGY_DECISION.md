@@ -1,10 +1,10 @@
-# Avaliação da tecnologia do Daily Message
+# Avaliação da tecnologia do StartupMessage
 
 **Data da comparação:** 13/11/2026
 
 ## Decisão
 
-Manter Python + CustomTkinter + PyInstaller como implementação principal do Daily Message. A experiência de compilação C# + WinUI 3 foi avaliada, mas **não foi promovida para a distribuição** porque o primeiro MSIX gerado ficou maior do que o pacote Python medido.
+Manter Python + CustomTkinter + PyInstaller como implementação principal do StartupMessage. A experiência de compilação C# + WinUI 3 foi avaliada, mas **não foi promovida para a distribuição** porque o primeiro MSIX gerado ficou maior do que o pacote Python medido.
 
 ## Medição realizada no Windows CI
 
