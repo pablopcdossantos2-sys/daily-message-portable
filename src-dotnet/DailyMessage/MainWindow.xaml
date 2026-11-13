@@ -5,7 +5,8 @@
     Title="Daily Message">
     <Grid RowDefinitions="*,Auto" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-            <StackPanel x:Name="RootPanel" MaxWidth="920" HorizontalAlignment="Center" Padding="28" Spacing="18">
+            <Border Padding="28">
+            <StackPanel x:Name="RootPanel" MaxWidth="920" HorizontalAlignment="Center" Spacing="18">
                 <StackPanel Spacing="4">
                     <TextBlock Text="Daily Message" FontSize="30" FontWeight="SemiBold" />
                     <TextBlock Text="Monte a mensagem que será exibida quando você entrar no Windows."
@@ -69,6 +70,7 @@
                     </StackPanel>
                 </Border>
             </StackPanel>
+            </Border>
         </ScrollViewer>
 
         <Border Grid.Row="1" Padding="16" Background="{ThemeResource LayerFillColorDefaultBrush}"
