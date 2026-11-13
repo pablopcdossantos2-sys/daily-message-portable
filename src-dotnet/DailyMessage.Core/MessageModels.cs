@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 namespace DailyMessage.Core;
 
 public sealed class MessageBlock
@@ -7,6 +8,7 @@ public sealed class MessageBlock
     public string Text { get; set; } = "";
     public string File { get; set; } = "";
     public string Caption { get; set; } = "";
+    [JsonPropertyName("title")]
     public string ChecklistTitle { get; set; } = "";
     public List<string> Items { get; set; } = [];
     public bool Required { get; set; } = true;
