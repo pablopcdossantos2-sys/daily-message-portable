@@ -38,7 +38,7 @@ Write-Host "==> Gerando ícones (placeholders, se ainda não existirem)"
 python packaging/make_assets.py
 
 Write-Host "==> PyInstaller"
-foreach ($d in "build", "dist") { if (Test-Path $d) { Remove-Item $d -Recurse -Force } }
+foreach ($d in "build", "dist", "release") { if (Test-Path $d) { Remove-Item $d -Recurse -Force } }
 python -m PyInstaller packaging/dailymessage.spec --noconfirm --clean --distpath dist --workpath build/pyi
 if ($LASTEXITCODE -ne 0) { throw "PyInstaller falhou" }
 
@@ -77,7 +77,13 @@ New-Item -ItemType Directory -Force $release | Out-Null
     $cer = Join-Path $release "DailyMessage-test.cer"
     Export-PfxCertificate -Cert $cert -FilePath $pfx -Password (ConvertTo-SecureString "test1234" -AsPlainText -Force) | Out-Null
     Export-Certificate -Cert $cert -FilePath $cer | Out-Null
-    & $signtool sign /fd SHA256 /f $pfx /p test1234 $out
-    Write-Host "   Para instalar: importe $cer em 'Pessoas Confiáveis' (admin) e rode Add-AppxPackage '$out'"
+    $testOut = Join-Path $release "DailyMessage-validation.msix"
+    Copy-Item $out $testOut -Force
+    & $signtool sign /fd SHA256 /f $pfx /p test1234 $testOut
+    if ($LASTEXITCODE -ne 0) { throw "Assinatura de teste falhou" }
+    & $signtool verify /pa /v $testOut
+    if ($LASTEXITCODE -ne 0) { throw "Verificação da assinatura de teste falhou" }
+    Write-Host "   Pacote de validação assinado: $testOut"
+    Write-Host "   Pacote de envio à Store (não assinado): $out"
   }
 Write-Host "==> Pacote MSIX concluído."
