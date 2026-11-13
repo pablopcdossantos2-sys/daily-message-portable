@@ -38,7 +38,7 @@
 
       <Extensions>
         <desktop:Extension Category="windows.startupTask"
-                           Executable="$targetnametoken$.exe"
+                           Executable="DailyMessage.exe"
                            EntryPoint="Windows.FullTrustApplication">
           <desktop:StartupTask TaskId="DailyMessageTask" Enabled="false" DisplayName="Daily Message" />
         </desktop:Extension>
