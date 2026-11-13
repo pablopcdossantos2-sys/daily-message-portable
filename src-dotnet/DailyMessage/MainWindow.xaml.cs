@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.StartupTask;
+using Windows.Storage;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
 
@@ -226,7 +227,8 @@ public sealed partial class MainWindow : Window
     {
         foreach (var collect in _collectors) collect();
         _config.Title = TitleBox.Text;
-        _config.Seconds = (int)Math.Clamp(SecondsBox.Value, 3, 600);
+        var seconds = double.IsFinite(SecondsBox.Value) ? SecondsBox.Value : 10;
+        _config.Seconds = (int)Math.Clamp(seconds, 3, 600);
         _config.Theme = ThemeBox.SelectedIndex switch { 1 => "light", 2 => "dark", _ => "system" };
         _config.Language = LanguageBox.SelectedIndex switch { 1 => "pt-BR", 2 => "en", _ => "auto" };
         _config = _config.Normalize();
