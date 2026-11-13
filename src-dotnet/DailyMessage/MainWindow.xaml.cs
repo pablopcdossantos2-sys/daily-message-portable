@@ -16,6 +16,7 @@ public sealed partial class MainWindow : Window
     private MessageConfig _config = new();
     private readonly List<Action> _collectors = [];
     private bool _updatingStartup;
+    private bool _updatingUi;
 
     public MainWindow()
     {
@@ -57,11 +58,14 @@ public sealed partial class MainWindow : Window
         _config = await ConfigStore.LoadAsync(ConfigFile);
         TitleBox.Text = _config.Title;
         SecondsBox.Value = _config.Seconds;
+        _updatingUi = true;
         ThemeBox.SelectedIndex = _config.Theme switch { "light" => 1, "dark" => 2, _ => 0 };
         AccentBox.SelectedIndex = _config.Accent switch { "teal" => 1, "rose" => 2, "amber" => 3, _ => 0 };
+        LanguageBox.SelectedIndex = _config.Language switch { "pt-BR" => 1, "en" => 2, _ => 0 };
+        _updatingUi = false;
         ApplyTheme();
         ApplyAccent();
-        LanguageBox.SelectedIndex = _config.Language switch { "pt-BR" => 1, "en" => 2, _ => 0 };
+        ApplyLanguage();
         RenderBlocks();
         await RefreshStartupAsync();
     }
@@ -86,7 +90,7 @@ public sealed partial class MainWindow : Window
             var header = new Grid { ColumnDefinitions = { new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }, new ColumnDefinition { Width = GridLength.Auto }, new ColumnDefinition { Width = GridLength.Auto }, new ColumnDefinition { Width = GridLength.Auto } } };
             var label = new TextBlock
             {
-                Text = block.Type switch { "text" => "Texto", "image" => "Imagem", _ => "Checklist" },
+                Text = UiText.Get(_config.Language, block.Type switch { "text" => "block.text", "image" => "block.image", _ => "block.checklist" }),
                 FontWeight = Microsoft.UI.Text.FontWeights.SemiBold,
                 VerticalAlignment = VerticalAlignment.Center
             };
@@ -102,7 +106,7 @@ public sealed partial class MainWindow : Window
             moveDown.Click += (_, _) => MoveBlock(blockIndex, 1);
             header.Children.Add(moveDown);
 
-            var remove = new Button { Content = "Remover", MinWidth = 76 };
+            var remove = new Button { Content = UiText.Get(_config.Language, "block.remove"), MinWidth = 76 };
             Grid.SetColumn(remove, 3);
             remove.Click += (_, _) => RemoveBlock(blockIndex);
             header.Children.Add(remove);
@@ -128,13 +132,13 @@ public sealed partial class MainWindow : Window
 
     private void BuildTextEditor(Panel parent, MessageBlock block)
     {
-        var style = new ComboBox { Header = "Estilo", Width = 220, SelectedIndex = block.Style switch { "heading" => 1, "note" => 2, _ => 0 } };
-        style.Items.Add(new ComboBoxItem { Content = "Texto normal" });
-        style.Items.Add(new ComboBoxItem { Content = "Título" });
-        style.Items.Add(new ComboBoxItem { Content = "Nota" });
+        var style = new ComboBox { Header = UiText.Get(_config.Language, "style"), Width = 220, SelectedIndex = block.Style switch { "heading" => 1, "note" => 2, _ => 0 } };
+        style.Items.Add(new ComboBoxItem { Content = UiText.Get(_config.Language, "style.body") });
+        style.Items.Add(new ComboBoxItem { Content = UiText.Get(_config.Language, "style.heading") });
+        style.Items.Add(new ComboBoxItem { Content = UiText.Get(_config.Language, "style.note") });
         var text = new TextBox
         {
-            Header = "Texto",
+            Header = UiText.Get(_config.Language, "text.header"),
             Text = block.Text,
             AcceptsReturn = true,
             TextWrapping = TextWrapping.Wrap,
@@ -154,20 +158,20 @@ public sealed partial class MainWindow : Window
     {
         var location = new TextBlock
         {
-            Text = string.IsNullOrWhiteSpace(block.File) ? "Nenhuma imagem selecionada" : block.File,
+            Text = string.IsNullOrWhiteSpace(block.File) ? UiText.Get(_config.Language, "image.none") : block.File,
             TextWrapping = TextWrapping.Wrap,
             Foreground = (Brush)Application.Current.Resources["TextFillColorSecondaryBrush"]
         };
-        var choose = new Button { Content = string.IsNullOrWhiteSpace(block.File) ? "Escolher imagem..." : "Trocar imagem..." };
+        var choose = new Button { Content = string.IsNullOrWhiteSpace(block.File) ? UiText.Get(_config.Language, "image.choose") : UiText.Get(_config.Language, "image.change") };
         choose.Click += async (_, _) =>
         {
             var path = await PickImageAsync();
             if (path is null) return;
             block.File = path;
             location.Text = Path.GetFileName(path);
-            choose.Content = "Trocar imagem...";
+            choose.Content = UiText.Get(_config.Language, "image.change");
         };
-        var caption = new TextBox { Header = "Legenda (opcional)", Text = block.Caption, MaxLength = 200 };
+        var caption = new TextBox { Header = UiText.Get(_config.Language, "image.caption"), Text = block.Caption, MaxLength = 200 };
         parent.Children.Add(location);
         parent.Children.Add(choose);
         parent.Children.Add(caption);
@@ -176,10 +180,10 @@ public sealed partial class MainWindow : Window
 
     private void BuildChecklistEditor(Panel parent, MessageBlock block)
     {
-        var title = new TextBox { Header = "Título da checklist (opcional)", Text = block.ChecklistTitle, MaxLength = 100 };
+        var title = new TextBox { Header = UiText.Get(_config.Language, "check.title"), Text = block.ChecklistTitle, MaxLength = 100 };
         var items = new TextBox
         {
-            Header = "Itens — um por linha",
+            Header = UiText.Get(_config.Language, "check.items"),
             Text = string.Join(Environment.NewLine, block.Items),
             AcceptsReturn = true,
             TextWrapping = TextWrapping.Wrap,
@@ -187,7 +191,7 @@ public sealed partial class MainWindow : Window
         };
         var required = new CheckBox
         {
-            Content = "Obrigatória para fechar a janela",
+            Content = UiText.Get(_config.Language, "check.required"),
             IsChecked = block.Required
         };
         parent.Children.Add(title);
@@ -221,7 +225,7 @@ public sealed partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            FeedbackText.Text = $"Não foi possível importar a imagem: {ex.Message}";
+            FeedbackText.Text = UiText.Get(_config.Language, "image.error") + ex.Message;
             return null;
         }
     }
@@ -236,6 +240,60 @@ public sealed partial class MainWindow : Window
         _config.Accent = AccentBox.SelectedIndex switch { 1 => "teal", 2 => "rose", 3 => "amber", _ => "indigo" };
         _config.Language = LanguageBox.SelectedIndex switch { 1 => "pt-BR", 2 => "en", _ => "auto" };
         _config = _config.Normalize();
+        ApplyTheme();
+        ApplyAccent();
+    }
+
+    private void ApplyLanguage()
+    {
+        var language = _config.Language;
+        Title = "Daily Message";
+        SubtitleText.Text = UiText.Get(language, "app.subtitle");
+        ContentHeading.Text = UiText.Get(language, "content");
+        TitleBox.Header = UiText.Get(language, "title");
+        TitleBox.PlaceholderText = UiText.Get(language, "title.placeholder");
+        AddTextButton.Content = UiText.Get(language, "add.text");
+        AddImageButton.Content = UiText.Get(language, "add.image");
+        AddChecklistButton.Content = UiText.Get(language, "add.checklist");
+        ContentHint.Text = UiText.Get(language, "content.hint");
+        TimeHeading.Text = UiText.Get(language, "time");
+        TimeDescription.Text = UiText.Get(language, "time.description");
+        SecondsBox.Header = UiText.Get(language, "seconds");
+        AppearanceHeading.Text = UiText.Get(language, "appearance");
+        ThemeBox.Header = UiText.Get(language, "theme");
+        ((ComboBoxItem)ThemeBox.Items[0]).Content = UiText.Get(language, "theme.system");
+        ((ComboBoxItem)ThemeBox.Items[1]).Content = UiText.Get(language, "theme.light");
+        ((ComboBoxItem)ThemeBox.Items[2]).Content = UiText.Get(language, "theme.dark");
+        AccentBox.Header = UiText.Get(language, "accent");
+        ((ComboBoxItem)AccentBox.Items[0]).Content = UiText.Get(language, "accent.indigo");
+        ((ComboBoxItem)AccentBox.Items[1]).Content = UiText.Get(language, "accent.teal");
+        ((ComboBoxItem)AccentBox.Items[2]).Content = UiText.Get(language, "accent.rose");
+        ((ComboBoxItem)AccentBox.Items[3]).Content = UiText.Get(language, "accent.amber");
+        LanguageBox.Header = UiText.Get(language, "language");
+        ((ComboBoxItem)LanguageBox.Items[0]).Content = UiText.Get(language, "language.auto");
+        ((ComboBoxItem)LanguageBox.Items[1]).Content = UiText.Get(language, "language.pt");
+        ((ComboBoxItem)LanguageBox.Items[2]).Content = "English";
+        StartupHeading.Text = UiText.Get(language, "startup");
+        StartupToggle.Header = UiText.Get(language, "startup.toggle");
+        OpenStartupSettingsButton.Content = UiText.Get(language, "startup.openSettings");
+        PreviewButton.Content = UiText.Get(language, "preview");
+        SaveButton.Content = UiText.Get(language, "save");
+    }
+
+    private void Language_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_updatingUi || LanguageBox is null || BlocksPanel is null) return;
+        _config.Language = LanguageBox.SelectedIndex switch { 1 => "pt-BR", 2 => "en", _ => "auto" };
+        ApplyLanguage();
+        RenderBlocks();
+        _ = RefreshStartupAsync();
+    }
+
+    private void Appearance_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_updatingUi || ThemeBox is null || AccentBox is null) return;
+        _config.Theme = ThemeBox.SelectedIndex switch { 1 => "light", 2 => "dark", _ => "system" };
+        _config.Accent = AccentBox.SelectedIndex switch { 1 => "teal", 2 => "rose", 3 => "amber", _ => "indigo" };
         ApplyTheme();
         ApplyAccent();
     }
@@ -268,12 +326,12 @@ public sealed partial class MainWindow : Window
         SyncDraft();
         if (_config.Blocks.Count >= 30)
         {
-            FeedbackText.Text = "O limite de 30 blocos foi atingido.";
+            FeedbackText.Text = UiText.Get(_config.Language, "blocks.limit");
             return;
         }
         if (block.Type == "image" && _config.Blocks.Count(x => x.Type == "image") >= 10)
         {
-            FeedbackText.Text = "O limite de 10 imagens foi atingido.";
+            FeedbackText.Text = UiText.Get(_config.Language, "images.limit");
             return;
         }
         _config.Blocks.Add(block);
@@ -326,11 +384,11 @@ public sealed partial class MainWindow : Window
         {
             SyncDraft();
             await ConfigStore.SaveAsync(ConfigFile, _config);
-            FeedbackText.Text = "Configurações salvas neste computador.";
+            FeedbackText.Text = UiText.Get(_config.Language, "saved");
         }
         catch (Exception ex)
         {
-            FeedbackText.Text = $"Não foi possível salvar: {ex.Message}";
+            FeedbackText.Text = UiText.Get(_config.Language, "save.error") + ex.Message;
         }
     }
 
