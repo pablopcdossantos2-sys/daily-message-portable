@@ -44,9 +44,17 @@ jobs:
         run: |
           $identity = if ($env:MSIX_IDENTITY_NAME) { $env:MSIX_IDENTITY_NAME } else { "Publisher.DailyMessage" }
           ./packaging/validate_msix.ps1 -MsixPath "release/DailyMessage-validation.msix" -IdentityName $identity
-      - uses: actions/upload-artifact@v4
+      - name: Upload Store-ready MSIX
+        if: ${{ vars.MSIX_IDENTITY_NAME != '' && vars.MSIX_PUBLISHER != '' && vars.MSIX_PUBLISHER_DISPLAY_NAME != '' && vars.MSIX_DISPLAY_NAME != '' }}
+        uses: actions/upload-artifact@v4
         with:
-          name: DailyMessage-MSIX
+          name: DailyMessage-MSIX-STORE
+          path: release/DailyMessage_*.msix
+      - name: Upload validation-only MSIX (Partner Center identity is missing)
+        if: ${{ vars.MSIX_IDENTITY_NAME == '' || vars.MSIX_PUBLISHER == '' || vars.MSIX_PUBLISHER_DISPLAY_NAME == '' || vars.MSIX_DISPLAY_NAME == '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: DailyMessage-MSIX-VALIDATION-ONLY
           path: release/DailyMessage_*.msix
       - name: Publish GitHub release asset
         if: ${{ startsWith(github.ref, 'refs/tags/v') }}
