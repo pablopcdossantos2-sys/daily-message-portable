@@ -40,9 +40,9 @@ jobs:
       - name: Install and validate the signed MSIX package
         shell: pwsh
         env:
-          MSIX_IDENTITY_NAME: ${{ vars.MSIX_IDENTITY_NAME }}
+          MSIX_IDENTITY_NAME: ${{ vars.MSIX_IDENTITY_NAME || 'pablopcdsantos.DailyMessage' }}
         run: |
-          $identity = if ($env:MSIX_IDENTITY_NAME) { $env:MSIX_IDENTITY_NAME } else { "Publisher.StartupMessage" }
+          $identity = if ($env:MSIX_IDENTITY_NAME) { $env:MSIX_IDENTITY_NAME } else { "pablopcdsantos.DailyMessage" }
           ./packaging/validate_msix.ps1 -MsixPath "release/StartupMessage-validation.msix" -IdentityName $identity
       - name: Create test installation kit
         shell: pwsh
@@ -61,7 +61,7 @@ jobs:
           name: StartupMessage-MSIX-TEST-KIT
           path: release/StartupMessage-MSIX-TEST.zip
       - name: Upload Store-ready MSIX
-        if: ${{ always() }}
+        if: ${{ success() }}
         uses: actions/upload-artifact@v7
         with:
           name: StartupMessage-MSIX-STORE
