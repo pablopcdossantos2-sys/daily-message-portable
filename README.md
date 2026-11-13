@@ -1,6 +1,6 @@
-# Daily Message — Microsoft Store
+# StartupMessage — Microsoft Store
 
-[![build](https://github.com/pablopcdossantos2-sys/daily-message-portable/actions/workflows/build.yml/badge.svg)](https://github.com/pablopcdossantos2-sys/daily-message-portable/actions/workflows/build.yml)
+[![build](https://github.com/pablopcdossantos2-sys/startup-message/actions/workflows/build.yml/badge.svg)](https://github.com/pablopcdossantos2-sys/startup-message/actions/workflows/build.yml)
 ![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB)
 ![License](https://img.shields.io/badge/license-MIT-green)
@@ -29,11 +29,11 @@ Aplicativo **gratuito, distribuído exclusivamente pela Microsoft Store** para W
 
 A versão de usuário será distribuída exclusivamente pela **Microsoft Store**. Não haverá ZIP portátil nem instalação manual.
 
-Para testar uma compilação de desenvolvimento, baixe o artefato **DailyMessage-MSIX-TEST-KIT** na execução do GitHub Actions e siga o [guia de instalação do pacote de teste](docs/INSTALL_TEST_PACKAGE.md). O kit inclui o certificado público de teste e o instalador que o registra no local correto do Windows.
+Para testar uma compilação de desenvolvimento, baixe o artefato **StartupMessage-MSIX-TEST-KIT** na execução do GitHub Actions e siga o [guia de instalação do pacote de teste](docs/INSTALL_TEST_PACKAGE.md). O kit inclui o certificado público de teste e o instalador que o registra no local correto do Windows.
 
 ## 🚀 Como usar
 
-1. Abra o **Daily Message**.
+1. Abra o **StartupMessage**.
 2. Defina o **título** e monte o conteúdo com **+ Texto**, **+ Imagem** e **+ Checklist** (use ↑ ↓ para reordenar e ✕ para remover).
 3. Em uma checklist, escreva **um item por linha** e deixe **"Obrigatória para fechar a janela"** marcada para exigir todos os itens.
 4. Defina o **tempo obrigatório** (em segundos).
@@ -54,14 +54,14 @@ Por design — e por exigência das políticas da Microsoft Store — o app **n�
 |---|---|
 | **Microsoft Store (MSIX)** | `windows.startupTask` (API `StartupTask`). Também gerenciável em *Configurações → Aplicativos → Inicialização*. |
 
-`DailyMessageRunner.exe` exibe a mensagem no boot; `DailyMessage.exe` abre as configurações.
+`StartupMessageRunner.exe` exibe a mensagem no boot; `StartupMessage.exe` abre as configurações.
 
 ## 🛠️ Desenvolvimento
 
 Requer **Windows 10/11** e **Python 3.10+** (recomendado 3.12).
 
 ```powershell
-git clone https://github.com/pablopcdossantos2-sys/daily-message-portable.git
+git clone https://github.com/pablopcdossantos2-sys/startup-message.git
 cd daily-message-portable
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
