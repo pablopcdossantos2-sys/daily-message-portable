@@ -81,8 +81,7 @@ New-Item -ItemType Directory -Force $release | Out-Null
     Copy-Item $out $testOut -Force
     & $signtool sign /fd SHA256 /f $pfx /p test1234 $testOut
     if ($LASTEXITCODE -ne 0) { throw "Assinatura de teste falhou" }
-    & $signtool verify /pa /v $testOut
-    if ($LASTEXITCODE -ne 0) { throw "Verificação da assinatura de teste falhou" }
+    # A verificação da confiança ocorre no teste de instalação, após importar o certificado em TrustedPeople.
     Write-Host "   Pacote de validação assinado: $testOut"
     Write-Host "   Pacote de envio à Store (não assinado): $out"
   }
