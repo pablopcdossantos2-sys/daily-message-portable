@@ -5,7 +5,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI;
 using Windows.ApplicationModel;
-using Windows.ApplicationModel.StartupTask;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
