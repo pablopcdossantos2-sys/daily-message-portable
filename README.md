@@ -51,7 +51,6 @@ Por design — e por exigência das políticas da Microsoft Store — o app **n�
 | Distribuição | Mecanismo |
 |---|---|
 | **Microsoft Store (MSIX)** | `windows.startupTask` (API `StartupTask`). Também gerenciável em *Configurações → Aplicativos → Inicialização*. |
-| **Portátil (.zip)** | Chave `HKCU\Software\Microsoft\Windows\CurrentVersion\Run` (+ `StartupApproved`), sem administrador. |
 
 `DailyMessageRunner.exe` exibe a mensagem no boot; `DailyMessage.exe` abre as configurações.
 
