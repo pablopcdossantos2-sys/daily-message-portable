@@ -18,7 +18,7 @@ public static class ConfigStore
                 return new MessageConfig();
 
             await using var stream = File.OpenRead(filePath);
-            var config = await JsonSerializer.DeserializeAsync<MessageConfig>(stream, JsonOptions, cancellationToken);
+            var config = await JsonSerializer.DeserializeAsync<MessageConfig>(stream, JsonOptions, cancellationToken).ConfigureAwait(false);
             return (config ?? new MessageConfig()).Normalize();
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
@@ -37,8 +37,8 @@ public static class ConfigStore
         var temporary = filePath + ".tmp";
         await using (var stream = File.Create(temporary))
         {
-            await JsonSerializer.SerializeAsync(stream, config.Normalize(), JsonOptions, cancellationToken);
-            await stream.FlushAsync(cancellationToken);
+            await JsonSerializer.SerializeAsync(stream, config.Normalize(), JsonOptions, cancellationToken).ConfigureAwait(false);
+            await stream.FlushAsync(cancellationToken).ConfigureAwait(false);
         }
 
         File.Move(temporary, filePath, overwrite: true);
