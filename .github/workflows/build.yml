@@ -27,14 +27,14 @@ jobs:
       - name: Build MSIX
         shell: pwsh
         env:
-          MSIX_IDENTITY_NAME: ${{ vars.MSIX_IDENTITY_NAME }}
-          MSIX_PUBLISHER: ${{ vars.MSIX_PUBLISHER }}
-          MSIX_PUBLISHER_DISPLAY_NAME: ${{ vars.MSIX_PUBLISHER_DISPLAY_NAME }}
-          MSIX_DISPLAY_NAME: ${{ vars.MSIX_DISPLAY_NAME }}
+          MSIX_IDENTITY_NAME: ${{ vars.MSIX_IDENTITY_NAME || 'pablopcdsantos.DailyMessage' }}
+          MSIX_PUBLISHER: ${{ vars.MSIX_PUBLISHER || 'CN=A3E973B8-1411-4314-B754-F3DADD99C070' }}
+          MSIX_PUBLISHER_DISPLAY_NAME: ${{ vars.MSIX_PUBLISHER_DISPLAY_NAME || 'pablopcdsantos' }}
+          MSIX_DISPLAY_NAME: ${{ vars.MSIX_DISPLAY_NAME || 'StartupMessage' }}
         run: |
-          $identity = if ($env:MSIX_IDENTITY_NAME) { $env:MSIX_IDENTITY_NAME } else { "Publisher.StartupMessage" }
-          $publisher = if ($env:MSIX_PUBLISHER) { $env:MSIX_PUBLISHER } else { "CN=Publisher" }
-          $publisherDisplay = if ($env:MSIX_PUBLISHER_DISPLAY_NAME) { $env:MSIX_PUBLISHER_DISPLAY_NAME } else { "Publisher" }
+          $identity = if ($env:MSIX_IDENTITY_NAME) { $env:MSIX_IDENTITY_NAME } else { "pablopcdsantos.DailyMessage" }
+          $publisher = if ($env:MSIX_PUBLISHER) { $env:MSIX_PUBLISHER } else { "CN=A3E973B8-1411-4314-B754-F3DADD99C070" }
+          $publisherDisplay = if ($env:MSIX_PUBLISHER_DISPLAY_NAME) { $env:MSIX_PUBLISHER_DISPLAY_NAME } else { "pablopcdsantos" }
           $display = if ($env:MSIX_DISPLAY_NAME) { $env:MSIX_DISPLAY_NAME } else { "StartupMessage" }
           ./packaging/build.ps1 -IdentityName $identity -Publisher $publisher -PublisherDisplayName $publisherDisplay -DisplayName $display -SignTest
       - name: Install and validate the signed MSIX package
@@ -61,19 +61,19 @@ jobs:
           name: StartupMessage-MSIX-TEST-KIT
           path: release/StartupMessage-MSIX-TEST.zip
       - name: Upload Store-ready MSIX
-        if: ${{ vars.MSIX_IDENTITY_NAME != '' && vars.MSIX_PUBLISHER != '' && vars.MSIX_PUBLISHER_DISPLAY_NAME != '' && vars.MSIX_DISPLAY_NAME != '' }}
+        if: ${{ always() }}
         uses: actions/upload-artifact@v7
         with:
           name: StartupMessage-MSIX-STORE
           path: release/StartupMessage_*.msix
       - name: Upload validation-only MSIX (Partner Center identity is missing)
-        if: ${{ vars.MSIX_IDENTITY_NAME == '' || vars.MSIX_PUBLISHER == '' || vars.MSIX_PUBLISHER_DISPLAY_NAME == '' || vars.MSIX_DISPLAY_NAME == '' }}
+        if: ${{ false }}
         uses: actions/upload-artifact@v7
         with:
           name: StartupMessage-MSIX-VALIDATION-ONLY
           path: release/StartupMessage_*.msix
       - name: Publish GitHub release asset
-        if: ${{ startsWith(github.ref, 'refs/tags/v') && vars.MSIX_IDENTITY_NAME != '' && vars.MSIX_PUBLISHER != '' && vars.MSIX_PUBLISHER_DISPLAY_NAME != '' && vars.MSIX_DISPLAY_NAME != '' }}
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
         uses: softprops/action-gh-release@v3
         with:
           files: release/StartupMessage_*.msix
