@@ -11,6 +11,18 @@ permissions:
   contents: write
 
 jobs:
+  native-winui-build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: "10.0.x"
+      - name: Run C# core tests
+        run: dotnet test tests-dotnet/DailyMessage.Core.Tests/DailyMessage.Core.Tests.csproj --configuration Release
+      - name: Build native WinUI 3 MSIX project
+        run: dotnet build src-dotnet/DailyMessage/DailyMessage.csproj --configuration Release -p:Platform=x64 -p:AppxPackageSigningEnabled=false
+
   test-and-package:
     runs-on: windows-latest
     steps:
