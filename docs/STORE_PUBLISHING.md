@@ -2,7 +2,7 @@
 
 ## 1. Antes de tudo
 1. Crie uma conta de desenvolvedor no **Partner Center** (conta pessoal).
-2. **Reserve o nome** do app (ex.: "Daily Message").
+2. **Reserve o nome** do app (ex.: "StartupMessage").
 3. Em *Gerenciamento de produtos → Identidade do produto*, copie:
    `Package/Identity/Name`, `Package/Identity/Publisher` (CN=GUID) e `PublisherDisplayName`.
 
@@ -14,7 +14,7 @@
   -PublisherDisplayName "<PublisherDisplayName>" `
   -DisplayName "<Nome reservado>"
 ```
-O arquivo `release/DailyMessage_<versão>_x64.msix` **não precisa ser assinado**: a Store assina. Não é gerado ZIP portátil.
+O arquivo `release/StartupMessage_<versão>_x64.msix` **não precisa ser assinado**: a Store assina. Não é gerado ZIP portátil.
 Substitua os ícones placeholder (`assets/` e `packaging/Assets/`) pela arte final.
 
 ## 3. Ficha do app (checklist)
@@ -38,7 +38,7 @@ Substitua os ícones placeholder (`assets/` e `packaging/Assets/`) pela arte fin
 
 ## 7. English certification notes
 
-> Daily Message is a Win32 desktop app packaged as MSIX and declares the restricted runFullTrust capability to run its Python/PyInstaller interface. Automatic startup uses the windows.startupTask extension, disabled by default and enabled only after the user requests it. To test: open the app, add text and a required checklist with two items, set five seconds, and select Preview. The Close and OK controls remain disabled until the countdown reaches zero and both items are checked. The app does not interfere with Task Manager, Ctrl+Alt+Del, or Windows shutdown. The maximum display time is 600 seconds.
+> StartupMessage is a Win32 desktop app packaged as MSIX and declares the restricted runFullTrust capability to run its Python/PyInstaller interface. Automatic startup uses the windows.startupTask extension, disabled by default and enabled only after the user requests it. To test: open the app, add text and a required checklist with two items, set five seconds, and select Preview. The Close and OK controls remain disabled until the countdown reaches zero and both items are checked. The app does not interfere with Task Manager, Ctrl+Alt+Del, or Windows shutdown. The maximum display time is 600 seconds.
 
 ## 8. GitHub Actions package identity
 
@@ -49,7 +49,7 @@ After obtaining the Partner Center identity, add these repository Variables unde
 - MSIX_PUBLISHER_DISPLAY_NAME
 - MSIX_DISPLAY_NAME
 
-The workflow uses these values automatically. If all four values are present, the artifact is named `DailyMessage-MSIX-STORE`. If any value is missing, the build still runs for technical validation but the artifact is named `DailyMessage-MSIX-VALIDATION-ONLY`; that package must not be submitted to the Store.
+The workflow uses these values automatically. If all four values are present, the artifact is named `StartupMessage-MSIX-STORE`. If any value is missing, the build still runs for technical validation but the artifact is named `StartupMessage-MSIX-VALIDATION-ONLY`; that package must not be submitted to the Store.
 
 ## 9. Atualizações
 
