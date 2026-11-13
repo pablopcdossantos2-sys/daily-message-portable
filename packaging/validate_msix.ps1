@@ -29,10 +29,10 @@ try {
         throw "O pacote $IdentityName não foi registrado após a instalação."
     }
 
-    $settingsExe = Join-Path $installed.InstallLocation "DailyMessage.exe"
-    $runnerExe = Join-Path $installed.InstallLocation "DailyMessageRunner.exe"
-    if (-not (Test-Path $settingsExe)) { throw "DailyMessage.exe não está presente no pacote instalado." }
-    if (-not (Test-Path $runnerExe)) { throw "DailyMessageRunner.exe não está presente no pacote instalado." }
+    $settingsExe = Join-Path $installed.InstallLocation "StartupMessage.exe"
+    $runnerExe = Join-Path $installed.InstallLocation "StartupMessageRunner.exe"
+    if (-not (Test-Path $settingsExe)) { throw "StartupMessage.exe não está presente no pacote instalado." }
+    if (-not (Test-Path $runnerExe)) { throw "StartupMessageRunner.exe não está presente no pacote instalado." }
 
     Write-Host "==> Conferindo manifesto registrado"
     $manifestPath = Join-Path $installed.InstallLocation "AppxManifest.xml"
@@ -42,8 +42,8 @@ try {
     $extension = $manifest.SelectSingleNode("//desktop:Extension[@Category='windows.startupTask']", $namespaces)
     $task = $manifest.SelectSingleNode("//desktop:StartupTask[@TaskId='DailyMessageTask']", $namespaces)
     if (-not $extension -or -not $task) { throw "A extensão DailyMessageTask não foi registrada no manifesto." }
-    if ($extension.GetAttribute("Executable") -ne "DailyMessageRunner.exe") {
-        throw "A tarefa de inicialização não aponta para DailyMessageRunner.exe."
+    if ($extension.GetAttribute("Executable") -ne "StartupMessageRunner.exe") {
+        throw "A tarefa de inicialização não aponta para StartupMessageRunner.exe."
     }
     if ($task.GetAttribute("Enabled") -ne "false") {
         throw "A tarefa de inicialização deveria vir desativada por padrão."
