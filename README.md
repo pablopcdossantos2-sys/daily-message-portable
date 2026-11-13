@@ -29,6 +29,8 @@ Aplicativo **gratuito, distribuído exclusivamente pela Microsoft Store** para W
 
 A versão de usuário será distribuída exclusivamente pela **Microsoft Store**. Não haverá ZIP portátil nem instalação manual.
 
+Para testar uma compilação de desenvolvimento, baixe o artefato **DailyMessage-MSIX-TEST-KIT** na execução do GitHub Actions e siga o [guia de instalação do pacote de teste](docs/INSTALL_TEST_PACKAGE.md). O kit inclui o certificado público de teste e o instalador que o registra no local correto do Windows.
+
 ## 🚀 Como usar
 
 1. Abra o **Daily Message**.
