@@ -3,11 +3,9 @@ from __future__ import annotations
 import json
 import os
 import re
-import uuid
 from dataclasses import asdict, dataclass, field, fields
 from pathlib import Path
 
-from . import paths
 
 APP_DIR_NAME = "DailyMessage"
 MIN_SECONDS, MAX_SECONDS, DEFAULT_SECONDS = 3, 600, 10
@@ -128,17 +126,6 @@ def parse_seconds(text: str) -> int | None:
         return None
     value = int(text)
     return value if MIN_SECONDS <= value <= MAX_SECONDS else None
-
-
-def _writable(directory: Path) -> bool:
-    try:
-        directory.mkdir(parents=True, exist_ok=True)
-        probe = directory / f".w{uuid.uuid4().hex}"
-        probe.write_text("x")
-        probe.unlink()
-        return True
-    except OSError:
-        return False
 
 
 def config_dir() -> Path:
