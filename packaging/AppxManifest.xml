@@ -26,7 +26,7 @@
   </Resources>
 
   <Applications>
-    <Application Id="App" Executable="DailyMessage.exe" EntryPoint="Windows.FullTrustApplication">
+    <Application Id="App" Executable="StartupMessage.exe" EntryPoint="Windows.FullTrustApplication">
       <uap:VisualElements
         DisplayName="{{DISPLAY_NAME}}"
         Description="Exibe uma mensagem personalizada, com imagens e checklists, sempre que o Windows inicia."
@@ -42,7 +42,7 @@
       <Extensions>
         <!-- Inicia o "Runner" no login. O usuário controla em Configurações > Aplicativos > Inicialização. -->
         <desktop:Extension Category="windows.startupTask"
-                           Executable="DailyMessageRunner.exe"
+                           Executable="StartupMessageRunner.exe"
                            EntryPoint="Windows.FullTrustApplication">
           <desktop:StartupTask TaskId="DailyMessageTask" Enabled="false" DisplayName="{{DISPLAY_NAME}}" />
         </desktop:Extension>
