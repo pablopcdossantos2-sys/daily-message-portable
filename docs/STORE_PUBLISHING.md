@@ -32,5 +32,25 @@ Substitua os ícones placeholder (`assets/` e `packaging/Assets/`) pela arte fin
 ## 5. Notas de certificação (modelo)
 > O app declara a capacidade restrita `runFullTrust` porque é um aplicativo desktop Win32 (Python empacotado com PyInstaller) distribuído em MSIX. A inicialização automática usa o `windows.startupTask` (desativado por padrão; o usuário ativa pelo app ou pelo Windows). Como testar: abra o app, escreva um texto, adicione uma checklist com 2 itens, defina 5 s e clique em "Visualizar" — o X e o Ok ficam esmaecidos até o contador zerar e os 2 itens serem marcados. O bloqueio vale apenas para a janela do app; não interfere no Gerenciador de Tarefas nem no desligamento do Windows. O tempo é limitado a 600 s e definido pelo próprio usuário.
 
-## 6. Atualizações
-Aumente `__version__` em `src/dailymessage/__init__.py`, gere o MSIX novamente e envie uma nova submissão.
+## 6. English listing description (en-US)
+
+> Display a personalized message every time you sign in to Windows. Build your message with short or long text, images, and interactive checklists. Choose how long the message must remain on screen; if a checklist is marked as required, every item must also be checked before the window can close. Customize the theme and accent color. The app works offline, has no ads, and does not collect or transmit personal data. Startup is optional and can be managed in the app or in Windows Settings.
+
+## 7. English certification notes
+
+> Daily Message is a Win32 desktop app packaged as MSIX and declares the restricted runFullTrust capability to run its Python/PyInstaller interface. Automatic startup uses the windows.startupTask extension, disabled by default and enabled only after the user requests it. To test: open the app, add text and a required checklist with two items, set five seconds, and select Preview. The Close and OK controls remain disabled until the countdown reaches zero and both items are checked. The app does not interfere with Task Manager, Ctrl+Alt+Del, or Windows shutdown. The maximum display time is 600 seconds.
+
+## 8. GitHub Actions package identity
+
+After obtaining the Partner Center identity, add these repository Variables under Settings → Secrets and variables → Actions → Variables:
+
+- MSIX_IDENTITY_NAME
+- MSIX_PUBLISHER
+- MSIX_PUBLISHER_DISPLAY_NAME
+- MSIX_DISPLAY_NAME
+
+The workflow uses these values automatically. If they are not configured, it builds with provisional values for technical validation only; that package must not be submitted to the Store.
+
+## 9. Atualizações
+
+Aumente __version__ em src/dailymessage/__init__.py, gere um novo MSIX e envie a atualização pelo Partner Center. Mantenha a identidade do pacote e incremente a versão MSIX (o quarto componente permanece zero).
