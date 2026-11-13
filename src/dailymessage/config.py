@@ -130,13 +130,10 @@ def parse_seconds(text: str) -> int | None:
 
 def config_dir() -> Path:
     """Dados privados do pacote MSIX; fallback local apenas durante desenvolvimento."""
-    try:
-        from . import winapi
-        if winapi.is_packaged():
-            from winrt.windows.storage import ApplicationData
-            return Path(ApplicationData.current.local_folder.path)
-    except Exception:
-        pass
+    from . import winapi
+    if winapi.is_packaged():
+        from winrt.windows.storage import ApplicationData
+        return Path(ApplicationData.current.local_folder.path)
     root = os.environ.get("LOCALAPPDATA") or os.environ.get("APPDATA") or str(Path.home())
     return Path(root) / APP_DIR_NAME
 
