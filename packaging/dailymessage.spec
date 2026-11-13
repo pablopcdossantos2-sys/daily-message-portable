@@ -1,7 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
 # Gera DOIS executáveis na mesma pasta (onedir):
-#   DailyMessage.exe        -> janela de configurações
-#   DailyMessageRunner.exe  -> exibe a mensagem (boot / startupTask do MSIX)
+#   StartupMessage.exe        -> janela de configurações
+#   StartupMessageRunner.exe  -> exibe a mensagem (boot / startupTask do MSIX)
 from pathlib import Path
 
 from PyInstaller.utils.hooks import collect_data_files, collect_submodules
@@ -24,7 +24,7 @@ a = Analysis(
 pyz = PYZ(a.pure)
 
 common = dict(exclude_binaries=True, debug=False, strip=False, upx=False, console=False, icon=ICON)
-exe_settings = EXE(pyz, a.scripts, [], name="DailyMessage", **common)
-exe_runner = EXE(pyz, a.scripts, [], name="DailyMessageRunner", **common)
+exe_settings = EXE(pyz, a.scripts, [], name="StartupMessage", **common)
+exe_runner = EXE(pyz, a.scripts, [], name="StartupMessageRunner", **common)
 
-coll = COLLECT(exe_settings, exe_runner, a.binaries, a.datas, strip=False, upx=False, name="DailyMessage")
+coll = COLLECT(exe_settings, exe_runner, a.binaries, a.datas, strip=False, upx=False, name="StartupMessage")
