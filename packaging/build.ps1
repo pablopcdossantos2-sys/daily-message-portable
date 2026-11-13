@@ -1,16 +1,16 @@
 <#
 .SYNOPSIS  Gera exclusivamente o pacote MSIX para Microsoft Store.
-.EXAMPLE   ./packaging/build.ps1 -IdentityName "12345Publisher.DailyMessage" -Publisher "CN=XXXXXXXX-XXXX" -PublisherDisplayName "Seu Nome"
+.EXAMPLE   ./packaging/build.ps1 -IdentityName "12345Publisher.StartupMessage" -Publisher "CN=XXXXXXXX-XXXX" -PublisherDisplayName "Seu Nome"
 .EXAMPLE   ./packaging/build.ps1 -SignTest   # MSIX assinado com certificado de teste (instalação local)
 #>
 [CmdletBinding()]
 param(
   [string]$Version,
   [switch]$SignTest,
-  [string]$IdentityName = "Publisher.DailyMessage",
+  [string]$IdentityName = "Publisher.StartupMessage",
   [string]$Publisher = "CN=Publisher",
   [string]$PublisherDisplayName = "Publisher",
-  [string]$DisplayName = "Daily Message"
+  [string]$DisplayName = "StartupMessage"
 )
 $ErrorActionPreference = "Stop"
 $root = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
@@ -31,8 +31,8 @@ if (-not $Version) {
   $m = Select-String -Path "src/dailymessage/__init__.py" -Pattern '__version__\s*=\s*"([^"]+)"'
   $Version = $m.Matches[0].Groups[1].Value
 }
-Write-Host "==> Daily Message MSIX — versão $Version"
-if ($IdentityName -eq "Publisher.DailyMessage" -or $Publisher -eq "CN=Publisher") { Write-Warning "Identidade provisória: pacote apenas para validação, não submeta à Store." }
+Write-Host "==> StartupMessage MSIX — versão $Version"
+if ($IdentityName -eq "Publisher.StartupMessage" -or $Publisher -eq "CN=Publisher") { Write-Warning "Identidade provisória: pacote apenas para validação, não submeta à Store." }
 
 Write-Host "==> Gerando ícones (placeholders, se ainda não existirem)"
 python packaging/make_assets.py
@@ -50,7 +50,7 @@ New-Item -ItemType Directory -Force $release | Out-Null
   $stage = Join-Path $root "build/msix"
   if (Test-Path $stage) { Remove-Item $stage -Recurse -Force }
   New-Item -ItemType Directory -Force $stage | Out-Null
-  Copy-Item "dist/DailyMessage/*" $stage -Recurse
+  Copy-Item "dist/StartupMessage/*" $stage -Recurse
   Copy-Item "packaging/Assets" (Join-Path $stage "Assets") -Recurse
 
   $parts = @($Version.Split('.')); while ($parts.Count -lt 3) { $parts += '0' }
@@ -62,7 +62,7 @@ New-Item -ItemType Directory -Force $release | Out-Null
     Replace("{{VERSION}}", $msixVersion)
   Set-Content (Join-Path $stage "AppxManifest.xml") $manifest -Encoding UTF8
 
-  $out = Join-Path $release "DailyMessage_${msixVersion}_x64.msix"
+  $out = Join-Path $release "StartupMessage_${msixVersion}_x64.msix"
   & $makeappx pack /d $stage /p $out /o
   if ($LASTEXITCODE -ne 0) { throw "makeappx falhou" }
   Write-Host "   $out"
@@ -71,13 +71,13 @@ New-Item -ItemType Directory -Force $release | Out-Null
     Write-Host "==> Assinatura de TESTE (não use para a Store)"
     $signtool = Find-SdkTool "signtool.exe"
     $cert = New-SelfSignedCertificate -Type Custom -Subject $Publisher -KeyUsage DigitalSignature `
-      -FriendlyName "DailyMessage Test" -CertStoreLocation "Cert:\CurrentUser\My" `
+      -FriendlyName "StartupMessage Test" -CertStoreLocation "Cert:\CurrentUser\My" `
       -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3", "2.5.29.19={text}")
-    $pfx = Join-Path $release "DailyMessage-test.pfx"
-    $cer = Join-Path $release "DailyMessage-test.cer"
+    $pfx = Join-Path $release "StartupMessage-test.pfx"
+    $cer = Join-Path $release "StartupMessage-test.cer"
     Export-PfxCertificate -Cert $cert -FilePath $pfx -Password (ConvertTo-SecureString "test1234" -AsPlainText -Force) | Out-Null
     Export-Certificate -Cert $cert -FilePath $cer | Out-Null
-    $testOut = Join-Path $release "DailyMessage-validation.msix"
+    $testOut = Join-Path $release "StartupMessage-validation.msix"
     Copy-Item $out $testOut -Force
     & $signtool sign /fd SHA256 /f $pfx /p test1234 $testOut
     if ($LASTEXITCODE -ne 0) { throw "Assinatura de teste falhou" }
