@@ -62,7 +62,7 @@ Requer **Windows 10/11** e **Python 3.10+** (recomendado 3.12).
 
 ```powershell
 git clone https://github.com/pablopcdossantos2-sys/startup-message.git
-cd daily-message-portable
+cd startup-message
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements-dev.txt
