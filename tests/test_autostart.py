@@ -1,3 +1,5 @@
+import pytest
+
 from dailymessage import autostart, winapi
 
 
@@ -17,3 +19,17 @@ def test_autostart_unavailable_off_windows(monkeypatch):
     assert status.enabled is False
     assert status.can_change is False
     assert status.note_key == "autostart.unsupported"
+
+
+@pytest.mark.parametrize(
+    ("state", "expected"),
+    [
+        (0, autostart.Status(False)),
+        (1, autostart.Status(True)),
+        (2, autostart.Status(False, False, "autostart.blocked_user")),
+        (3, autostart.Status(False, False, "autostart.blocked_policy")),
+        (4, autostart.Status(True, False, "autostart.managed_policy")),
+    ],
+)
+def test_startup_task_states(state, expected):
+    assert autostart._state_to_status(state) == expected
