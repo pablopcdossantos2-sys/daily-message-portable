@@ -58,6 +58,9 @@ public sealed partial class MainWindow : Window
         TitleBox.Text = _config.Title;
         SecondsBox.Value = _config.Seconds;
         ThemeBox.SelectedIndex = _config.Theme switch { "light" => 1, "dark" => 2, _ => 0 };
+        AccentBox.SelectedIndex = _config.Accent switch { "teal" => 1, "rose" => 2, "amber" => 3, _ => 0 };
+        ApplyTheme();
+        ApplyAccent();
         LanguageBox.SelectedIndex = _config.Language switch { "pt-BR" => 1, "en" => 2, _ => 0 };
         RenderBlocks();
         await RefreshStartupAsync();
@@ -230,8 +233,34 @@ public sealed partial class MainWindow : Window
         var seconds = double.IsFinite(SecondsBox.Value) ? SecondsBox.Value : 10;
         _config.Seconds = (int)Math.Clamp(seconds, 3, 600);
         _config.Theme = ThemeBox.SelectedIndex switch { 1 => "light", 2 => "dark", _ => "system" };
+        _config.Accent = AccentBox.SelectedIndex switch { 1 => "teal", 2 => "rose", 3 => "amber", _ => "indigo" };
         _config.Language = LanguageBox.SelectedIndex switch { 1 => "pt-BR", 2 => "en", _ => "auto" };
         _config = _config.Normalize();
+        ApplyTheme();
+        ApplyAccent();
+    }
+
+    private void ApplyTheme()
+    {
+        RootGrid.RequestedTheme = _config.Theme switch
+        {
+            "light" => ElementTheme.Light,
+            "dark" => ElementTheme.Dark,
+            _ => ElementTheme.Default
+        };
+    }
+
+    private static Windows.UI.Color GetAccentColor(string accent) => accent switch
+    {
+        "teal" => Windows.UI.Color.FromArgb(255, 13, 148, 136),
+        "rose" => Windows.UI.Color.FromArgb(255, 225, 29, 72),
+        "amber" => Windows.UI.Color.FromArgb(255, 217, 119, 6),
+        _ => Windows.UI.Color.FromArgb(255, 99, 102, 241)
+    };
+
+    private void ApplyAccent()
+    {
+        SaveButton.Background = new SolidColorBrush(GetAccentColor(_config.Accent));
     }
 
     private void AddBlock(MessageBlock block)
@@ -253,7 +282,26 @@ public sealed partial class MainWindow : Window
 
     private void AddText_Click(object sender, RoutedEventArgs e) => AddBlock(MessageBlock.TextBlock());
     private void AddChecklist_Click(object sender, RoutedEventArgs e) => AddBlock(MessageBlock.ChecklistBlock());
-    private void AddImage_Click(object sender, RoutedEventArgs e) => AddBlock(MessageBlock.ImageBlock());
+
+    private async void AddImage_Click(object sender, RoutedEventArgs e)
+    {
+        SyncDraft();
+        if (_config.Blocks.Count >= 30)
+        {
+            FeedbackText.Text = "O limite de 30 blocos foi atingido.";
+            return;
+        }
+        if (_config.Blocks.Count(x => x.Type == "image") >= 10)
+        {
+            FeedbackText.Text = "O limite de 10 imagens foi atingido.";
+            return;
+        }
+
+        var fileName = await PickImageAsync();
+        if (string.IsNullOrWhiteSpace(fileName)) return;
+        _config.Blocks.Add(new MessageBlock { Type = "image", File = fileName });
+        RenderBlocks();
+    }
 
     private void MoveBlock(int index, int direction)
     {
