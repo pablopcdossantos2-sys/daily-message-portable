@@ -36,11 +36,18 @@ jobs:
           $publisher = if ($env:MSIX_PUBLISHER) { $env:MSIX_PUBLISHER } else { "CN=Publisher" }
           $publisherDisplay = if ($env:MSIX_PUBLISHER_DISPLAY_NAME) { $env:MSIX_PUBLISHER_DISPLAY_NAME } else { "Publisher" }
           $display = if ($env:MSIX_DISPLAY_NAME) { $env:MSIX_DISPLAY_NAME } else { "Daily Message" }
-          ./packaging/build.ps1 -IdentityName $identity -Publisher $publisher -PublisherDisplayName $publisherDisplay -DisplayName $display
+          ./packaging/build.ps1 -IdentityName $identity -Publisher $publisher -PublisherDisplayName $publisherDisplay -DisplayName $display -SignTest
+      - name: Install and validate the signed MSIX package
+        shell: pwsh
+        env:
+          MSIX_IDENTITY_NAME: ${{ vars.MSIX_IDENTITY_NAME }}
+        run: |
+          $identity = if ($env:MSIX_IDENTITY_NAME) { $env:MSIX_IDENTITY_NAME } else { "Publisher.DailyMessage" }
+          ./packaging/validate_msix.ps1 -MsixPath "release/DailyMessage-validation.msix" -IdentityName $identity
       - uses: actions/upload-artifact@v4
         with:
           name: DailyMessage-MSIX
-          path: release/*.msix
+          path: release/DailyMessage_*.msix
       - name: Publish GitHub release asset
         if: ${{ startsWith(github.ref, 'refs/tags/v') }}
         uses: softprops/action-gh-release@v2
