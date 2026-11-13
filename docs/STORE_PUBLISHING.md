@@ -49,7 +49,7 @@ After obtaining the Partner Center identity, add these repository Variables unde
 - MSIX_PUBLISHER_DISPLAY_NAME
 - MSIX_DISPLAY_NAME
 
-The workflow uses these values automatically. If they are not configured, it builds with provisional values for technical validation only; that package must not be submitted to the Store.
+The workflow uses these values automatically. If all four values are present, the artifact is named `DailyMessage-MSIX-STORE`. If any value is missing, the build still runs for technical validation but the artifact is named `DailyMessage-MSIX-VALIDATION-ONLY`; that package must not be submitted to the Store.
 
 ## 9. Atualizações
 
