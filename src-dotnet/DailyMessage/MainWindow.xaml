@@ -85,7 +85,7 @@
                 <TextBlock x:Name="FeedbackText" VerticalAlignment="Center"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                 <Button Grid.Column="1" Content="Visualizar" Click="Preview_Click" MinWidth="120" />
-                <Button Grid.Column="2" Content="Salvar" Click="Save_Click" MinWidth="120"
+                <Button x:Name="SaveButton" Grid.Column="2" Content="Salvar" Click="Save_Click" MinWidth="120"
                         Style="{StaticResource AccentButtonStyle}" />
             </Grid>
         </Border>
