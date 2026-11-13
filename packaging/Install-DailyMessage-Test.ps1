@@ -2,14 +2,14 @@
 param()
 
 $ErrorActionPreference = "Stop"
-$msixPath = Join-Path $PSScriptRoot "DailyMessage-validation.msix"
-$certificatePath = Join-Path $PSScriptRoot "DailyMessage-test.cer"
+$msixPath = Join-Path $PSScriptRoot "StartupMessage-validation.msix"
+$certificatePath = Join-Path $PSScriptRoot "StartupMessage-test.cer"
 
 if (-not (Test-Path $msixPath)) {
-    throw "Arquivo DailyMessage-validation.msix não foi encontrado na mesma pasta deste instalador."
+    throw "Arquivo StartupMessage-validation.msix não foi encontrado na mesma pasta deste instalador."
 }
 if (-not (Test-Path $certificatePath)) {
-    throw "Certificado DailyMessage-test.cer não foi encontrado na mesma pasta deste instalador."
+    throw "Certificado StartupMessage-test.cer não foi encontrado na mesma pasta deste instalador."
 }
 
 $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
@@ -44,11 +44,11 @@ if (-not $existing) {
     Import-Certificate -FilePath $certificatePath -CertStoreLocation $storePath | Out-Null
 }
 
-Write-Host "==> Instalando Daily Message..."
+Write-Host "==> Instalando StartupMessage..."
 Add-AppxPackage -Path $msixPath -ErrorAction Stop
 
 Write-Host ""
-Write-Host "Daily Message foi instalado com sucesso." -ForegroundColor Green
+Write-Host "StartupMessage foi instalado com sucesso." -ForegroundColor Green
 Write-Host "Abra o aplicativo pelo menu Iniciar."
 Write-Host "O certificado público permanecerá em Pessoas Confiáveis para futuras atualizações deste build."
 Write-Host ""
