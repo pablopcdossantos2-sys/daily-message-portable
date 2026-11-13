@@ -19,11 +19,11 @@ public sealed partial class MessageWindow : Window
     private nint _hwnd;
     private bool _locked = true;
 
-    public MessageWindow(bool preview)
+    public MessageWindow(MessageConfig? config = null, bool preview = false)
     {
         InitializeComponent();
         _preview = preview;
-        _config = ConfigStore.LoadAsync(GetConfigPath()).GetAwaiter().GetResult();
+        _config = config?.Normalize() ?? ConfigStore.LoadAsync(GetConfigPath()).GetAwaiter().GetResult();
         _seconds = preview ? Math.Min(_config.Seconds, 5) : _config.Seconds;
         Title = preview ? "Daily Message — Prévia" : "Daily Message";
         CountdownBar.Maximum = _seconds;
