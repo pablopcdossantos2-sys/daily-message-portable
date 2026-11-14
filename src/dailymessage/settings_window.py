@@ -6,7 +6,7 @@ import dataclasses
 import logging
 import os
 import webbrowser
-from tkinter import filedialog
+from tkinter import filedialog, font as tkfont
 
 import customtkinter as ctk
 from PIL import Image
@@ -147,7 +147,11 @@ class SettingsApp(ctk.CTk):
         font_row = ctk.CTkFrame(body, fg_color="transparent")
         font_row.pack(fill="x", pady=(4, 12))
         self.font_family_var = ctk.StringVar(value=cfg.font_family)
-        ctk.CTkOptionMenu(font_row, values=list(cfgmod.FONT_FAMILIES), variable=self.font_family_var,
+        try:
+            available_fonts = sorted(set(tkfont.families(self)) | {cfg.font_family, cfgmod.DEFAULT_FONT_FAMILY})
+        except Exception:
+            available_fonts = list(cfgmod.FONT_FAMILIES)
+        ctk.CTkOptionMenu(font_row, values=available_fonts, variable=self.font_family_var,
                           width=210, height=36, corner_radius=10, font=theme.font(13),
                           dropdown_font=theme.font(13), fg_color=theme.SURFACE_ALT,
                           button_color=theme.BORDER, button_hover_color=theme.MUTED,
