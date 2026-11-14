@@ -23,15 +23,22 @@ def center_window(win, width: int, height: int) -> None:
     win.wm_geometry(f"+{max(x, 0)}+{max(y, 0)}")  # wm_geometry não é re-escalado
 
 
-def fit_and_center(win, width: int, height: int, *, min_size=(560, 460), max_ratio: float = 0.9) -> None:
-    """Ajusta o tamanho ao conteúdo, limitado a ~90 % da tela, e centraliza."""
+def fit_and_center(win, width: int, height: int, *, min_size=(560, 460), max_ratio: float = 0.9, fill_height_for_large: bool = False) -> None:
+    """Ajusta ao conteúdo; mensagens longas podem ocupar toda a altura útil."""
     scale = _window_scale(win)
-    max_w = win.winfo_screenwidth() / scale * max_ratio
-    max_h = (win.winfo_screenheight() - 80) / scale * max_ratio  # ~80 px de barra de tarefas
+    screen_w = win.winfo_screenwidth()
+    screen_h = win.winfo_screenheight()
+    max_w = screen_w / scale * max_ratio
+    available_h = max(300, screen_h - 80)  # preserva a área da barra de tarefas
+    max_h = available_h / scale if fill_height_for_large else available_h / scale * max_ratio
     w = int(min(max(width, min_size[0]), max_w))
     h = int(min(max(height, min_size[1]), max_h))
     win.minsize(min(min_size[0], w), min(min_size[1], h))
-    center_window(win, w, h)
+    win.geometry(f"{w}x{h}")
+    # A posição horizontal sempre é centralizada; janelas altas começam no topo útil.
+    x = int((screen_w - w * scale) / 2)
+    y = 0 if fill_height_for_large and height >= max_h else int((screen_h - h * scale) / 2) - 20
+    win.wm_geometry(f"+{max(x, 0)}+{max(y, 0)}")
 
 
 def apply_icon(win) -> None:
