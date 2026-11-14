@@ -11,7 +11,7 @@ ICON = str(ROOT / "assets" / "icon.ico")
 
 datas = collect_data_files("customtkinter")
 datas += [(str(ROOT / "assets" / "icon.ico"), "assets"), (str(ROOT / "assets" / "icon.png"), "assets")]
-hidden = collect_submodules("winrt")  # projeções WinRT (StartupTask)
+hidden = collect_submodules("winrt") + collect_submodules("pystray")  # WinRT e bandeja
 
 a = Analysis(
     [str(ROOT / "launcher.py")],
