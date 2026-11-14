@@ -17,6 +17,9 @@ MAX_CAPTION_LEN, MAX_LIST_TITLE_LEN = 200, 100
 THEMES = ("system", "light", "dark")
 ACCENTS = ("indigo", "teal", "rose", "amber")
 LANGUAGES = ("auto", "pt-BR", "en")
+MIN_FONT_SIZE, MAX_FONT_SIZE, DEFAULT_FONT_SIZE = 10, 40, 16
+DEFAULT_FONT_FAMILY = "Segoe UI"
+FONT_FAMILIES = ("Segoe UI", "Arial", "Calibri", "Cambria", "Consolas", "Georgia", "Tahoma", "Times New Roman", "Verdana")
 TEXT_STYLES = ("body", "heading", "note")
 IMAGE_NAME_RE = re.compile(r"^[0-9a-f]{32}\.(png|jpg)$")
 DEFAULT_TEXT = (
@@ -103,6 +106,8 @@ class Config:
     theme: str = "system"
     accent: str = "indigo"
     language: str = "auto"
+    font_family: str = DEFAULT_FONT_FAMILY
+    font_size: int = DEFAULT_FONT_SIZE
 
     def sanitized(self) -> "Config":
         d = Config()
@@ -117,6 +122,8 @@ class Config:
             theme=self.theme if self.theme in THEMES else d.theme,
             accent=self.accent if self.accent in ACCENTS else d.accent,
             language=self.language if self.language in LANGUAGES else d.language,
+            font_family=self.font_family if isinstance(self.font_family, str) and self.font_family.strip()[:80] else d.font_family,
+            font_size=max(MIN_FONT_SIZE, min(MAX_FONT_SIZE, self.font_size if isinstance(self.font_size, int) and not isinstance(self.font_size, bool) else d.font_size)),
         )
 
 
