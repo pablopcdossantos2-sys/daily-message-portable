@@ -34,6 +34,15 @@ class SettingsApp(ctk.CTk):
         uiutil.fit_and_center(self, 780, 860, min_size=(660, 520))
         uiutil.apply_icon(self)
         self._build()
+        # A janela principal de configurações deve abrir maximizada.
+        self.after(100, self._maximize_window)
+
+    def _maximize_window(self) -> None:
+        try:
+            if self.winfo_exists():
+                self.state("zoomed")
+        except Exception:
+            log.exception("Não foi possível maximizar a janela principal")
 
     # ---------------------------------------------------------- helpers
     def _card(self, parent, title: str) -> ctk.CTkFrame:
