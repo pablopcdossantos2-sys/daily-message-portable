@@ -43,12 +43,13 @@ def _run_winrt(coro_factory, timeout: float = 15.0):
 
 
 def _state_to_status(state: int) -> Status:
-    # StartupTaskState: 0 Disabled, 1 Enabled, 2 DisabledByUser, 3 DisabledByPolicy, 4 EnabledByPolicy
-    if state == 1:
+    # Valores oficiais de Windows.ApplicationModel.StartupTaskState:
+    # 0 Disabled, 1 DisabledByUser, 2 Enabled, 3 DisabledByPolicy, 4 EnabledByPolicy.
+    if state == 2:
         return Status(True)
     if state == 4:
         return Status(True, False, "autostart.managed_policy")
-    if state == 2:
+    if state == 1:
         return Status(False, False, "autostart.blocked_user")
     if state == 3:
         return Status(False, False, "autostart.blocked_policy")
