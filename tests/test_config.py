@@ -21,6 +21,9 @@ def test_sanitized_clamps_and_defaults():
     assert cfg.seconds == MAX_SECONDS
     assert cfg.theme == "system" and cfg.accent == "indigo" and cfg.language == "auto"
     assert cfg.blocks  # tipo inválido volta ao padrão
+    assert cfg.font_family == config.DEFAULT_FONT_FAMILY
+    assert cfg.font_size == config.DEFAULT_FONT_SIZE
+    assert Config(font_size=99).sanitized().font_size == config.MAX_FONT_SIZE
     assert Config(seconds=True).sanitized().seconds == config.DEFAULT_SECONDS
 
 
@@ -57,7 +60,7 @@ def test_roundtrip(tmp_path, monkeypatch):
         {"type": "text", "style": "heading", "text": "Olá"},
         {"type": "checklist", "title": "Antes de começar", "items": ["Café", "Agenda"], "required": True},
     ]
-    original = Config(title="Oi", blocks=blocks, seconds=20, theme="dark")
+    original = Config(title="Oi", blocks=blocks, seconds=20, theme="dark", font_family="Georgia", font_size=22)
     config.save(original)
     assert config.load() == original
 
