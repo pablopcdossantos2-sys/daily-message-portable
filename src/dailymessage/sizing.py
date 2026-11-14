@@ -14,9 +14,9 @@ def estimate_size(blocks: list[dict], font_size: int = 16) -> tuple[int, int]:
         kind = b.get("type")
         if kind == "text":
             heading = b.get("style") == "heading"
-            per_line = 55 if heading else 75
+            per_line = max(20, int((55 if heading else 75) / font_scale))
             lines = sum(max(1, math.ceil(len(p) / per_line)) for p in b["text"].split("\n"))
-            h += lines * (32 if heading else 26) + 16
+            h += int(lines * (32 if heading else 26) * font_scale) + 16
         elif kind == "image":
             w = max(w, 780)
             h += 340
