@@ -84,7 +84,7 @@ class MessageView(ctk.CTkFrame):
         )
         if self.cfg.title:
             lbl = ctk.CTkLabel(
-                head, text=self.cfg.title, font=theme.font(28, "bold"), text_color=theme.TEXT,
+                head, text=self.cfg.title, font=theme.font(self.cfg.font_size + 8, "bold", self.cfg.font_family), text_color=theme.TEXT,
                 anchor="w", justify="left", wraplength=480,
             )
             lbl.pack(fill="x")
@@ -141,9 +141,10 @@ class MessageView(ctk.CTkFrame):
 
     # ------------------------------------------------------------ blocos
     def _add_text(self, b: dict) -> None:
-        size, weight, color = TEXT_STYLES[b["style"]]
+        _size, weight, color = TEXT_STYLES[b["style"]]
+        size = self.cfg.font_size + (8 if b["style"] == "heading" else -3 if b["style"] == "note" else 0)
         lbl = ctk.CTkLabel(
-            self.scroll, text=b["text"], font=theme.font(size, weight), text_color=color,
+            self.scroll, text=b["text"], font=theme.font(size, weight, self.cfg.font_family), text_color=color,
             anchor="w", justify="left", wraplength=480,
         )
         lbl.pack(fill="x", padx=(2, 8), pady=(0, 14))
@@ -169,7 +170,7 @@ class MessageView(ctk.CTkFrame):
         ctk.CTkLabel(holder, image=img, text="").pack()
         self._imgs.append((pil, img))
         if b.get("caption"):
-            cap = ctk.CTkLabel(holder, text=b["caption"], font=theme.font(13),
+            cap = ctk.CTkLabel(holder, text=b["caption"], font=theme.font(max(9, self.cfg.font_size - 3), family=self.cfg.font_family),
                                text_color=theme.MUTED, justify="center", wraplength=480)
             cap.pack(pady=(6, 0))
             self._wrap.append((cap, 10))
@@ -181,7 +182,7 @@ class MessageView(ctk.CTkFrame):
         )
         box.pack(fill="x", padx=(2, 8), pady=(0, 14))
         if b["title"]:
-            t = ctk.CTkLabel(box, text=b["title"], font=theme.font(16, "bold"),
+            t = ctk.CTkLabel(box, text=b["title"], font=theme.font(self.cfg.font_size, "bold", self.cfg.font_family),
                              text_color=theme.TEXT, anchor="w", justify="left", wraplength=420)
             t.pack(fill="x", padx=16, pady=(14, 4))
             self._wrap.append((t, 10 + 32))
@@ -197,7 +198,7 @@ class MessageView(ctk.CTkFrame):
                 border_color=theme.MUTED, checkmark_color=theme.ON_ACCENT, command=self._refresh,
             )
             cb.pack(side="left", anchor="n")
-            lbl = ctk.CTkLabel(row, text=item, font=theme.font(15), text_color=theme.TEXT,
+            lbl = ctk.CTkLabel(row, text=item, font=theme.font(self.cfg.font_size, family=self.cfg.font_family), text_color=theme.TEXT,
                                anchor="w", justify="left", wraplength=400, cursor="hand2")
             lbl.pack(side="left", fill="x", expand=True, padx=(4, 0), pady=(1, 0))
             lbl.bind("<Button-1>", lambda _e, c=cb: c.toggle())  # clicar no texto também marca
@@ -346,7 +347,7 @@ def run_startup_message(cfg: Config, tr: Translator, *, delay_seconds: float = S
     root = ctk.CTk(fg_color=theme.BG)
     root.title(tr.t("app.name"))
     w, h = estimate_size(cfg.blocks)
-    uiutil.fit_and_center(root, w, h, min_size=MIN_SIZE)
+    uiutil.fit_and_center(root, w, h, min_size=MIN_SIZE, fill_height_for_large=True)
     uiutil.apply_icon(root)
     MessageView(root, cfg, tr, seconds=cfg.seconds)
     root.mainloop()
@@ -356,7 +357,7 @@ def open_preview(master, cfg: Config, tr: Translator):
     top = ctk.CTkToplevel(master, fg_color=theme.BG)
     top.title(f"{tr.t('app.name')} — {tr.t('msg.preview_tag')}")
     w, h = estimate_size(cfg.blocks)
-    uiutil.fit_and_center(top, w, h, min_size=MIN_SIZE)
+    uiutil.fit_and_center(top, w, h, min_size=MIN_SIZE, fill_height_for_large=True)
     uiutil.apply_icon(top)
     top.transient(master)
     MessageView(top, cfg, tr, seconds=min(cfg.seconds, PREVIEW_MAX_SECONDS), preview=True)
