@@ -346,7 +346,7 @@ def run_startup_message(cfg: Config, tr: Translator, *, delay_seconds: float = S
     theme.apply_mode(cfg.theme)
     root = ctk.CTk(fg_color=theme.BG)
     root.title(tr.t("app.name"))
-    w, h = estimate_size(cfg.blocks)
+    w, h = estimate_size(cfg.blocks, cfg.font_size)
     uiutil.fit_and_center(root, w, h, min_size=MIN_SIZE, fill_height_for_large=True)
     uiutil.apply_icon(root)
     MessageView(root, cfg, tr, seconds=cfg.seconds)
