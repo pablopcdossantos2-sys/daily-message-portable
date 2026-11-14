@@ -13,3 +13,8 @@ def test_image_widens_and_checklist_grows():
     assert w > BASE_W and h > BASE_H
     _, h2 = estimate_size([{"type": "checklist", "title": "", "items": ["a", "b", "c"], "required": True}])
     assert h2 > BASE_H
+
+
+def test_larger_font_increases_estimated_height():
+    blocks = [{"type": "text", "style": "body", "text": "Uma mensagem longa " * 100}]
+    assert estimate_size(blocks, 28)[1] > estimate_size(blocks, 16)[1]
