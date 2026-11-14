@@ -6,7 +6,9 @@ import math
 BASE_W, BASE_H = 640, 240  # largura padrão; altura = título + rodapé + margens
 
 
-def estimate_size(blocks: list[dict]) -> tuple[int, int]:
+def estimate_size(blocks: list[dict], font_size: int = 16) -> tuple[int, int]:
+    """Estima dimensões considerando o tamanho tipográfico configurado."""
+    font_scale = max(0.625, min(2.5, font_size / 16))
     w, h = BASE_W, BASE_H
     for b in blocks:
         kind = b.get("type")
@@ -19,5 +21,5 @@ def estimate_size(blocks: list[dict]) -> tuple[int, int]:
             w = max(w, 780)
             h += 340
         elif kind == "checklist":
-            h += 70 + 40 * len(b["items"])
+            h += int((70 + 40 * len(b["items"])) * font_scale)
     return w, h
