@@ -143,6 +143,22 @@ class SettingsApp(ctk.CTk):
 
         # --- aparência ---
         body = self._card(scroll, tr.t("card.look"))
+        self._muted(body, tr.t("look.font")).pack(anchor="w")
+        font_row = ctk.CTkFrame(body, fg_color="transparent")
+        font_row.pack(fill="x", pady=(4, 12))
+        self.font_family_var = ctk.StringVar(value=cfg.font_family)
+        ctk.CTkOptionMenu(font_row, values=list(cfgmod.FONT_FAMILIES), variable=self.font_family_var,
+                          width=210, height=36, corner_radius=10, font=theme.font(13),
+                          dropdown_font=theme.font(13), fg_color=theme.SURFACE_ALT,
+                          button_color=theme.BORDER, button_hover_color=theme.MUTED,
+                          text_color=theme.TEXT).pack(side="left")
+        self._muted(font_row, tr.t("look.font_size"), 13).pack(side="left", padx=(14, 8))
+        self.font_size_var = ctk.StringVar(value=str(cfg.font_size))
+        ctk.CTkOptionMenu(font_row, values=[str(n) for n in range(cfgmod.MIN_FONT_SIZE, cfgmod.MAX_FONT_SIZE + 1, 2)],
+                          variable=self.font_size_var, width=76, height=36, corner_radius=10,
+                          font=theme.font(13), dropdown_font=theme.font(13), fg_color=theme.SURFACE_ALT,
+                          button_color=theme.BORDER, button_hover_color=theme.MUTED,
+                          text_color=theme.TEXT).pack(side="left")
         self._muted(body, tr.t("look.theme")).pack(anchor="w")
         modes = [("system", tr.t("theme.system")), ("light", tr.t("theme.light")),
                  ("dark", tr.t("theme.dark"))]
@@ -424,6 +440,13 @@ class SettingsApp(ctk.CTk):
 
     def _collect_draft(self) -> None:
         self.cfg.title = self.title_entry.get().strip()[:MAX_TITLE_LEN]
+        if hasattr(self, "font_family_var"):
+            self.cfg.font_family = self.font_family_var.get()
+        if hasattr(self, "font_size_var"):
+            try:
+                self.cfg.font_size = int(self.font_size_var.get())
+            except ValueError:
+                self.cfg.font_size = cfgmod.DEFAULT_FONT_SIZE
         self._sync_blocks()
         secs = cfgmod.parse_seconds(self.sec_var.get())
         if secs is not None:
