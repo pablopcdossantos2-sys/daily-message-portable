@@ -361,7 +361,7 @@ def run_startup_message(cfg: Config, tr: Translator, *, delay_seconds: float = S
 def open_preview(master, cfg: Config, tr: Translator):
     top = ctk.CTkToplevel(master, fg_color=theme.BG)
     top.title(f"{tr.t('app.name')} — {tr.t('msg.preview_tag')}")
-    w, h = estimate_size(cfg.blocks)
+    w, h = estimate_size(cfg.blocks, cfg.font_size)
     uiutil.fit_and_center(top, w, h, min_size=MIN_SIZE, fill_height_for_large=True)
     uiutil.apply_icon(top)
     top.transient(master)
