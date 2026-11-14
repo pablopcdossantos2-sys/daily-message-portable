@@ -25,8 +25,8 @@ def test_autostart_unavailable_off_windows(monkeypatch):
     ("state", "expected"),
     [
         (0, autostart.Status(False)),
-        (1, autostart.Status(True)),
-        (2, autostart.Status(False, False, "autostart.blocked_user")),
+        (1, autostart.Status(False, False, "autostart.blocked_user")),
+        (2, autostart.Status(True)),
         (3, autostart.Status(False, False, "autostart.blocked_policy")),
         (4, autostart.Status(True, False, "autostart.managed_policy")),
     ],
