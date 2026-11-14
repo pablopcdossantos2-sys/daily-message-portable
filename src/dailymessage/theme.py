@@ -43,8 +43,8 @@ def hover_of(color: Color) -> Color:
     return mix(color, ("#000000", "#FFFFFF"), 0.14)
 
 
-def font(size: int, weight: str = "normal") -> ctk.CTkFont:
-    return ctk.CTkFont(family=FONT_FAMILY, size=size, weight=weight)
+def font(size: int, weight: str = "normal", family: str = FONT_FAMILY) -> ctk.CTkFont:
+    return ctk.CTkFont(family=family or FONT_FAMILY, size=size, weight=weight)
 
 
 def apply_mode(theme: str) -> None:
