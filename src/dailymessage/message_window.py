@@ -350,7 +350,12 @@ def run_startup_message(cfg: Config, tr: Translator, *, delay_seconds: float = S
     uiutil.fit_and_center(root, w, h, min_size=MIN_SIZE, fill_height_for_large=True)
     uiutil.apply_icon(root)
     MessageView(root, cfg, tr, seconds=cfg.seconds)
-    root.mainloop()
+    from . import tray
+    tray_icon = tray.start()
+    try:
+        root.mainloop()
+    finally:
+        tray.stop(tray_icon)
 
 
 def open_preview(master, cfg: Config, tr: Translator):
